@@ -1,4 +1,4 @@
-def isPossible(currV,k,colored,V,graph):
+def isPossible(currV, k, colored, V, graph):
     
     if currV == V:
         return True 
@@ -10,16 +10,16 @@ def isPossible(currV,k,colored,V,graph):
                 avail = False
                 break 
         
-        if avail == True:
+        if avail:
             colored[currV] = color 
-            if isPossible(currV+1,k,colored,V,graph) == True:
+            if isPossible(currV + 1, k, colored, V, graph):
                 return True 
             colored[currV] = -1
     
     return False
-    
+
 
 def graphColoring(graph, k, V):
     
     colored = [-1] * (V+1)
-    return isPossible(0,k,colored,V,graph)
+    return isPossible(0, k, colored, V, graph)
