@@ -1,26 +1,25 @@
-def findingSquareRootHelper(l,r,arr,ans,target):
-	if l<=r:
-		mid = (l + r) // 2
+def binarySearch(left, right, key, ans):
 
-		if arr[mid]*arr[mid] <= target:
-			#update ans and move right to see if any other better answer exists
-			ans[0] = mid
-			return findingSquareRootHelper(mid+1,r,arr,ans,target)
+	if left <= right:
+
+		mid = (left + right) // 2
+
+		if mid * mid <= key:
+			ans[0] = mid  # index represents the element
+			# we move to right to maximize the answer
+			binarySearch(mid + 1, right, key, ans)
 
 		else:
-			# agar arr[mid]*arr[mid] > target
-			# move left to find smaller value
-			return findingSquareRootHelper(l,mid-1,arr,ans,target)
+			binarySearch(left, mid - 1, key, ans)
 
 
-def findSquareRoot(target):
-	arr = [x for x in range(target + 1)]
-	ans = [-1]
-	l = 0
-	r = len(arr) - 1
-	findingSquareRootHelper(l,r,arr,ans,target)
+def findSqrt(num):
+
+	ans = [None]
+	binarySearch(0, num, num, ans)
 	return ans[0]
 
 
-print(findSquareRoot(9))
+print(findSqrt(125))
+
 
