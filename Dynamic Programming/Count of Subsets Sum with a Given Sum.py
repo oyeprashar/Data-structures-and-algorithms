@@ -1,30 +1,38 @@
-def knapsack01(currIndex,target,arr,memory):
+# User function Template for python3
+class Solution:
 
-    if target == 0:
-        return 1
+    def coutSubsetWithTargetSum(self, currIndex, arr, targetSum, memory):
 
-    if currIndex >= len(arr):
-        return 0
-    
-    if target - arr[currIndex] < 0:
-        return knapsack01(currIndex+1,target,arr,memory)
-    
-    if memory[currIndex][target] != -1:
-        return memory[currIndex][target]
-    
-    op1 = knapsack01(currIndex+1,target,arr,memory)
-    op2 = knapsack01(currIndex+1,target-arr[currIndex],arr,memory)
+        # This handles the case where the input targetSum was itself == 0 
+        # This allows the code to explore paths and not return 1 just because the input was zero!
+        if currIndex == len(arr):
+            if targetSum == 0:
+                return 1
+            return 0
 
-    memory[currIndex][target] = op1 + op2
+        if currIndex > len(arr):
+            return 0
 
-    return memory[currIndex][target]
+        if targetSum - arr[currIndex] < 0:
+            return self.coutSubsetWithTargetSum(currIndex + 1, arr, targetSum, memory)
 
-def countSubsets(arr,target):
-    memory = []
-    for x in range(len(arr)+1):
-        list1 = []
-        for y in range(target+1):
-            list1.append(-1)
-        memory.append(list1)
-    
-    return knapsack01(0,target,arr,memory)
+        if memory[currIndex][targetSum] != -1:
+            return memory[currIndex][targetSum]
+
+        op1 = self.coutSubsetWithTargetSum(currIndex + 1, arr, targetSum - arr[currIndex], memory)
+        op2 = self.coutSubsetWithTargetSum(currIndex + 1, arr, targetSum, memory)
+
+        memory[currIndex][targetSum] =  op1 + op2
+        return memory[currIndex][targetSum]
+
+    def perfectSum(self, arr, target):
+
+        memory = []
+        for i in range(len(arr)):
+            currRow = []
+            for j in range(target + 1):
+                currRow.append(-1)
+            memory.append(currRow)
+
+
+        return self.coutSubsetWithTargetSum(0, arr, target, memory)
