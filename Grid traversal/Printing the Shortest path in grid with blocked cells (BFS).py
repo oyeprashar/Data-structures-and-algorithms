@@ -1,71 +1,73 @@
-def shortestPath(sr,sc,grid):
+
+def isValidIndices(rowIndex, colIndex, matRows, matCols):
+
+    if rowIndex >= 0 and rowIndex < matRows and colIndex >= 0 and colIndex < matCols:
+        return True
+    return False
+
+def shortest_path(grid, sr, sc):
+
+    # all four directions are allowed
+    directions = [(0, -1), (0, 1), (-1, 0), (1, 0)]
+    queue = [(sr, sc)]
+    grid[sr][sc] = [0, 0]
+    dist = 0
 
     visited = []
-    for x in range(len(grid)):
-        list1 = []
-        for y in range(len(grid[0])):
-            list1.append(False)
-        visited.append(list1)
+    for i in range(len(grid)):
+        currRow = []
+        for j in range(len(grid[0])):
+            currRow.append(False)
+        visited.append(currRow)
 
-  
-    dr = [-1,1,0,0]
-    dc = [0,0,-1,1]
+    pathFound = False
+    destRow = None
+    destCol = None
 
-    desti = -1
-    destj = -1
+    while queue:
 
-    queue = [(sr,sc)]
-    visited[sr][sc] = (0,0)
-    found = False
+        dist += 1
 
-    while len(queue) > 0:
-        # print(1)
-        curr = queue.pop(0)
-        currR = curr[0]
-        currC = curr[1]
+        for _ in range(len(queue)):
 
 
-        for x in range(4):
-            nbrR = currR + dr[x]
-            nbrC = currC + dc[x]
+            curr = queue.pop(0)
 
-            if nbrR >= 0 and nbrC >= 0 and nbrR < len(grid) and nbrC < len(grid[0]):
+            for dir in directions:
 
-                if visited[nbrR][nbrC] == False and grid[nbrR][nbrC] != "#":
+                newRow = curr[0] + dir[0]
+                newCol = curr[1] + dir[1]
+                # print(newRow, newCol)
 
-                    visited[nbrR][nbrC] = (currR,currC)
-                    queue.append((nbrR,nbrC))
+                if isValidIndices(newRow, newCol, len(grid), len(grid[0])):
 
-                    if grid[nbrR][nbrC] == "E":
+                    if grid[newRow][newCol] == 'E':
+                        visited[newRow][newCol] = [curr[0], curr[1]]
+                        pathFound = True
+                        destRow = newRow
+                        destCol = newCol
+                        break
 
-                        desti = nbrR
-                        destj = nbrC
-                        found = True
+                    if visited[newRow][newCol] == False and grid[newRow][newCol] != '#':
+                        queue.append((newRow, newCol))
+                        visited[newRow][newCol] = [curr[0], curr[1]]
 
-        if found == True:
-            break
-    
-    if desti == -1 and destj == -1:
+            if pathFound:
+                break
+
+
+    if not pathFound:
         return -1
 
     path = []
+    while not (destRow == 0 and destCol == 0): # While we are not at the source node
+ 
+        path.append([(destRow, destCol)])
+        curr = visited[destRow][destCol]
+        destRow = curr[0]
+        destCol = curr[1]
 
-    check = 15
-    count = 0
-
-    for list1 in visited:
-        print(list1)
-
-    while desti != 0 or destj != 0:
-
-        count += 1
-        path.append([desti,destj])
-        curr = visited[desti][destj]
-        desti = curr[0]
-        destj = curr[1]
-
-    path.append((sr,sc))
-
+    path.append([0,0])
     return path[::-1]
 
 
@@ -75,5 +77,6 @@ grid = [['S','.','.','#','.','.','.'],
         ['.','.','#','#','.' ,'.', '.'],
         ['#','.','#','E','.','#','.']]
 
-print(shortestPath(0,0,grid))
+
+print(shortest_path(grid, 0, 0))
 
