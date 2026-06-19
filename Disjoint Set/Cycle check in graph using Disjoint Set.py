@@ -1,55 +1,66 @@
-#finding the cycle using optimized DSU
+"""
+disjoint set
 
-def find(element,parentList):
-    if parentList[element] == -1:
-        return element
+Disjoint sets are sets with nothing in common between them
 
-    absoluteParent = find(parentList[element],parentList)
-    parentList[element] = absoluteParent
+Find(x) : finds and returns the absolute parent of x --> T.C : O(N)
+Union : Merges two disjoint set by making parent of one set equal to another set --> T.C : O(N)
 
-    return absoluteParent
+Finding loop in undirected graph using DSU
+def findLoopUndirectedGraph(edges):
+    for edge in edges:
+        parent1 = find(u)
+        parent2 = find(v)
 
+        # They were already connected through some other path?
+        if parent1 == parent2:
+            return true
 
-def union(element1,element2,rankList,parentList):
-    parent1 = find(element1,parentList)
-    parent2 = find(element2,parentList)
+        union(u, v)
+"""
 
-    if parent1 != parent2:
-        if rankList[parent1] > rankList[parent2]:
-            parentList[parent2] = parent1
-            rankList[parent1] += rankList[parent2]
+class DisjointSet:
 
+    def __init__(self, number_of_nodes):
+        self.rank = [1]  * number_of_nodes
+        self.parent = [-1] * number_of_nodes
+
+    # Since rank is making the DS balanced the tc of find is O(logN) | Height of tree ≤ O(log N)
+    def find_parent(self, node):
+        if self.parent[node] == -1:
+            return node
+        return self.find_parent(self.parent[node])
+
+    # O(log N) since it is finding the parent and then changing the parent in O(1)
+    def union(self, node1, node2):
+        parent1 = self.find_parent(node1)
+        parent2 = self.find_parent(node2)
+        rank1 = self.rank[parent1]
+        rank2 = self.rank[parent2]
+
+        if rank1 > rank2:
+            self.parent[parent2] = parent1
+            self.rank[parent1] += self.rank[parent2]
         else:
-            parentList[parent1] = parent2
-            rankList[parent2] += rankList[parent1]
+            self.parent[parent1] = parent2
+            self.rank[parent2] += self.rank[parent1]
 
+def find_undirected_loop(edge_list, number_of_nodes):
 
-def findCycleDSU(edgeList):
-    rankList = [1] * len(edgeList)
-    parentList = [-1] * len(edgeList)
+    disjoint_set = DisjointSet(number_of_nodes)
 
-    for pair in edgeList:
-        v1 = pair[0]
-        v2 = pair[1]
+    # O(number_of_edges * logN)
+    for edge in edge_list:
+        u = edge[0]
+        v = edge[1]
 
-        parent1 = find(v1,parentList)
-        parent2 = find(v2,parentList)
+        parent1 = disjoint_set.find_parent(u)
+        parent2 = disjoint_set.find_parent(v)
 
-        print("checking for ", v1, "its parent =", parent1, "edge2 =", v2, "its parent2 =",parent2)
-
-        if parent1 != parent2:
-            # union(parent1,parent2,rankList,parentList)
-            union(v1,v2,rankList,parentList)
-            print(parentList)
-
-        else:
-            print("== cycle detected == for v1 =",v1,"its parent =",parent1,"v2 =",v2,"its parent2 =",parent2)
-
-            return
-
-    print("No cycle detected")
-
-
+        if parent1 == parent2:
+            return True
+        disjoint_set.union(u, v)
+    return False
 
 edgeList = [(0,1),(1,2),(2,3),(3,0)]
-findCycleDSU(edgeList)
+print(find_undirected_loop(edgeList, number_of_nodes = 4))
