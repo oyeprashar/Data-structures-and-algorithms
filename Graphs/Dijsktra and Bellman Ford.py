@@ -46,27 +46,9 @@ class Graph:
         return distance
 
     def bellmanford(self):
+        pass
+        # Check the bellmanford file for the correct 2026 code
 
-        INT_MAX = 3**38
-        distance = [INT_MAX] * self.numOfNodes
-        distance[0] = 0
-
-        for _ in range(self.numOfNodes):
-
-            for currV in self.adjList:
-
-                for nbr, edgeCost in self.adjList[currV]:
-                    distance[nbr] = min(distance[nbr], distance[currV] + edgeCost)
-
-
-        for currV in self.adjList:
-
-                for nbr, edgeCost in self.adjList[currV]:
-                    if distance[currV] + edgeCost < distance[nbr]:
-                        print("negative cycle found")
-                        return -1
-
-        return distance
 
 graph = Graph(9)
 graph.addEdge(0, 1, 4)
