@@ -1,63 +1,71 @@
-INT_MIN = -3**38
-
 class Solution:
 
+    """
+    Let's say we are at index i, and we want to compute the area. We need to find how much left area we can include?
 
-    def getLeftLimit(self, arr):
+    We start to travel to left from the index i and find a tower at index x whose height is less than i, we cannot this
+    tower at index x because it is smaller than all the tower from i (move to left) till x + 1. So we compute area from
+    x + 1 till index i.
+    """
+    def getLeftLimit(self, heights):
 
-        leftLimit = [0] * len(arr)
-        stack = [] # [(index, value)]
+        leftArr = [0] * len(heights)
+        stack = []
 
-        for i in range(len(arr)):
+        for i in range(len(heights)):
 
-            # pop all the non blocking element
-            while len(stack) > 0 and stack[-1][1] >= arr[i]:
+            # If height of a tower is >= to current tower than i can include them
+            while len(stack) > 0 and heights[stack[-1]] >= heights[i]:
+                stack.pop()
+
+
+            # no smaller element left of i
+            if len(stack) == 0:
+                leftArr[i] = 0
+
+            # + 1 because the tower is smaller than towers between this and ith, so we cannot include this smaller
+            # tower but include all the towers after it
+            else:
+                leftArr[i] = stack[-1] + 1
+
+            stack.append(i)
+        return leftArr
+
+    def getRightLimit(self, heights):
+
+        rightArr = [0] * len(heights)
+        stack = []
+
+        for i in range(len(heights) - 1, -1, -1):
+
+            while len(stack) > 0 and heights[stack[-1]] >= heights[i]:
                 stack.pop()
 
             if len(stack) == 0:
-                leftLimit[i] = 0
+                rightArr[i] = len(heights) - 1
+            else:
+                rightArr[i] = stack[-1] - 1
 
-            # blocking element found
-            elif stack[-1][1] < arr[i]:
-                leftLimit[i] = stack[-1][0] + 1
+            stack.append(i)
 
-            stack.append([i, arr[i]])
-
-        return leftLimit 
+        return rightArr
 
 
-    def getRightLimit(self, arr):
-        rightLimit = [0] * len(arr)
-        stack = [] # [(index, value)]
+    def largestRectangleArea(self, heights):
 
-        for i in range(len(arr) - 1, -1, -1):
+        leftLimits = self.getLeftLimit(heights)
+        rightLimits = self.getRightLimit(heights)
+        maxArea = 0
 
-            # remove all the non blocking elements from the stack
-            while len(stack) > 0 and stack[-1][1] >= arr[i]:
-                stack.pop()
+        # the loop runs from 0th till the last index because the tower itself can be the max Area
+        for i in range(len(heights)):
 
-            # extreme right limit is len(arr) - 1 i.e. the last index
-            if len(stack) == 0:
-                rightLimit[i] = len(arr) - 1
-
-            # blocking element
-            elif stack[-1][1] < arr[i]:
-                rightLimit[i] = stack[-1][0] - 1
-
-            stack.append([i, arr[i]])
-
-        return rightLimit
-
-    def getMaxArea(self,histogram):
-
-        leftLimit = self.getLeftLimit(histogram)
-        rightLimit = self.getRightLimit(histogram)
-
-        maxArea = INT_MIN
-
-        for i in range(len(arr)):
-            width = rightLimit[i] - leftLimit[i] + 1
-            currArea = histogram[i] * width
-            maxArea = max(maxArea, currArea)
+            width = rightLimits[i] - leftLimits[i] + 1
+            currentArea = width * heights[i]
+            maxArea = max(maxArea, currentArea)
 
         return maxArea
+
+
+s = Solution()
+print(s.largestRectangleArea(heights = [2,1,5,6,2,3,1]))
