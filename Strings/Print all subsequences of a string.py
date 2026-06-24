@@ -1,28 +1,26 @@
-"""
-Print all subsequences of a string
+class Solution:
 
-Input : abc
-Output : a, b, c, ab, bc, ac, abc
+    def generate_subsets(self, currIndex, currArr, stringArr, res):
+        
+        # exhaust the possibilities for subset
+        if currIndex == len(stringArr):
+            res.append("".join(currArr))
+            return
 
-Input : aaa
-Output : a, a, a, aa, aa, aa, aaa
-"""
+        # op1 : choose
+        currArr.append(stringArr[currIndex])
+        self.generate_subsets(currIndex + 1, currArr, stringArr, res)
+        currArr.pop()
 
-def printSubsequence(str1, currIndex, currSequence):
-
-    if currIndex >= len(str1):
-        print(currSequence)
-        return 
-
-    # To generate the subsequence of a string, at each character I have two options
-    #   1. include it in the current sequence
-    #   2. Don't include it in the current sequence
-
-    currSequence.append(str1[currIndex])
-    printSubsequence(str1, currIndex + 1, currSequence)
-    currSequence.pop()
-    printSubsequence(str1, currIndex + 1, currSequence)
+        # op2 : Skip
+        self.generate_subsets(currIndex + 1, currArr, stringArr, res)
 
 
-str1 = 'abc'
-printSubsequence(str1, 0, [])
+    def powerSet(self, s):
+        res = []
+        self.generate_subsets(0, [], list(s), res)
+        return sorted(res)
+
+s = Solution()
+# Correct O/P : ["","a", "ab", "abc", "ac", "b", "bc", "c"]
+print(s.powerSet("abc"))
