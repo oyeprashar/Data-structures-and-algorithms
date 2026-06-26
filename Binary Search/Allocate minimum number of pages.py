@@ -1,52 +1,71 @@
-
-
 class Solution:
-    
-    
-    def isValid(self,currMax,pages,noOfStudents):
-        reqStudents = 1
-        pagesRead = 0
-    
+
+    """
+    maxPagesLimit : is the max no of pages a students is allowed to read
+    We find the no of students needed such that this max limit is obeyed 
+
+    If the number of students needed to obey this limit is greator than input, we return false
+    """
+
+    def isValid(self, maxPagesLimit, pages, noOfStudents):
+        """
+
+        :param maxPages: maxPage a student reads
+        :param pages: array of the books
+        :param noOfStudents: total students we need to allocate books to
+        :return: True/False
+        """
+
+        studentsNeeded = 1
+        currPagesRead = 0
+
         for page in pages:
-            
-            if page > currMax: # this currMax is smaller than number of pages in one of the book, it means maanlo agar koi sirf yeh kitbaad bhi padhta hai toh
-                return False   # usske more than currMax padhna padega which means yeh currMax valid/possible nhi hai3
-    
-            pagesRead += page
-    
-    
-            if pagesRead > currMax:
-                reqStudents += 1
-                pagesRead = page
-    
-    
-         `  if reqStudents > noOfStudents:
+
+            # a book is greator than the limit and this limit cannot be valid
+            if page > maxPagesLimit:
+                return False
+
+            # Make the current student read this book
+            currPagesRead += page
+
+            # if the student read more than the limit, increment students needed and make that student read this book
+            if currPagesRead > maxPagesLimit:
+                studentsNeeded += 1
+                currPagesRead = page # since last student was not able to read this, next student starts from here
+
+            # we needed more students than allowed
+            if studentsNeeded > noOfStudents:
                 return False
     
-        if reqStudents > noOfStudents:
-            return False
         return True
-
-    def minimizePages(self,left,right,noOfStudents,pages,ans):
-    
-        if left <= right:
-    
-            mid = (left+right) // 2
-    
-            if self.isValid(mid,pages,noOfStudents) is True:
-                # save and move to left to minmize it
-                ans[0] = mid
-                return self.minimizePages(left,mid-1,noOfStudents,pages,ans)
-            else:
-                # else move to right and find a valid ans
-                return self.minimizePages(mid+1,right,noOfStudents,pages,ans)
-    
-
-
-    def findPages(self,pages, n, noOfStudents):SS
         
-        left = 0
-        right = sum(pages)
-        ans = [-1]
-        self.minimizePages(left,right,noOfStudents,pages,ans)
+
+    """
+    Binary search over the answer space and trying to minimise it
+    """
+    def binarySearchOnAnswer(self, left, right, pages, noOfStudents, ans):
+
+        if left <= right:
+
+            mid = (left + right) // 2
+
+            if self.isValid(mid, pages, noOfStudents):
+                # save and move left to minimise this
+                ans[0] = min(ans[0], mid)
+                return self.binarySearchOnAnswer(left, mid - 1, pages, noOfStudents, ans)
+
+            else:
+                return self.binarySearchOnAnswer(mid + 1, right, pages, noOfStudents, ans)
+
+
+    def findPages(self, pages, noOfStudents):
+        
+        if noOfStudents > len(pages):
+            return -1
+
+        left = max(pages) # when k == n, then each students reads one book from the array.
+        right = sum(pages) # when k = 1, one student reads all the books
+        ans = [3**38]
+        self.binarySearchOnAnswer(left, right, pages, noOfStudents, ans)
         return ans[0]
+
