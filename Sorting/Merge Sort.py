@@ -39,7 +39,6 @@ def mergeSort(arr):
 
 	while i < len(leftHalf):
 		arr[k] = leftHalf[i]
-
 		i += 1
 		k += 1
 
@@ -51,42 +50,3 @@ def mergeSort(arr):
 arr = [99,88,77,66,11]
 mergeSort(arr)
 print(arr)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
