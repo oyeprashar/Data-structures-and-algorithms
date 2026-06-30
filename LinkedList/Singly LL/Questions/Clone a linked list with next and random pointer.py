@@ -1,46 +1,54 @@
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, x: int, next: 'Node' = None, random: 'Node' = None):
+        self.val = int(x)
+        self.next = next
+        self.random = random
+"""
+
+
+
 class Solution:
-    
-    def copyRandomList(self, head: 'Node') -> 'Node':
-        
-        if head == None:
-            return None
-        
-        curr = head 
-        
-        while curr != None:
-            # print(curr.val)
-            nextNode = curr.next
+    def copyRandomList(self, head):
+
+        if head is None:
+            return head
+
+        # step 1 : create new nodes
+        curr = head
+        while curr is not None:
             newNode = Node(curr.val)
+            nextNode = curr.next
             curr.next = newNode
             newNode.next = nextNode
             curr = nextNode
-        
-        # we have to use another loop to copy the random pointers because a random pointer might be pointing to elements backwards and
-        # when we break the links between old and new linkedlist we cannot access the random ke copies, hence we have to copy the random
-        # pointers in a seperate loop
+
+
+        # step 2 : Make the random connections between new nodes
         curr = head
-        while curr!= None:
-            if curr.random != None:
+        while curr is not None:
+            if curr.random is not None:
                 curr.next.random = curr.random.next
-            else:
-                curr.next.random = None
-            
             curr = curr.next.next
+
+
+        # step 3 : remove the connection between the old and new nodes
+        # IMP : We need to unlink both old and new nodes!
         
-        curr1 = head
-        head2 = curr1.next
-        curr2 = head2
+        curr = head
+        newHead = head.next
         
-        while curr1 != None and curr2 != None:
+        while curr is not None:
             
-            curr1.next = curr1.next.next
-            curr1 = curr1.next
+            newNode = curr.next
+            curr.next = curr.next.next
             
-            if curr2.next == None:
-                curr2 = None
-            else:
-                curr2.next = curr2.next.next
-                curr2 = curr2.next
-        
+            if newNode.next != None:
+                newNode.next = newNode.next.next
+                
+            curr = curr.next
             
-        return head2
+        return newHead
+            
+
