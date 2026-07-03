@@ -1,30 +1,42 @@
+
+"""
+duplicate subtree of size two or more.
+"""
+
 class Solution:
-    def duplicate_checker(self,root,dict1):
-        if root == None:
-            return "$"
-        
-        if root.left == None and root.right == None:
+
+    def duplicateSubTree(self, root, freq):
+        ### The subtree should be size two of more! That means single nodes should not be in the freq dic
+
+        # null nodes! Return some placeholder
+        if root is None:
+            return "X"
+
+        # return the leaf nodes to make sure the dict contains trees of sizes > 1 i.e. size >= 2
+        if root.left is None and root.right is None:
             return str(root.data)
-        
-        leftStr = self.duplicate_checker(root.left,dict1)
-        rightStr = self.duplicate_checker(root.right,dict1)
-        
-        currStr = leftStr + str(root.data) + rightStr
-        
-        if currStr in dict1:
-            dict1[currStr] += 1
+
+        leftPart = self.duplicateSubTree(root.left, freq)
+        rightPart = self.duplicateSubTree(root.right, freq)
+
+        # Since we returned for leaf nodes, the currSubtree is always > 1 i.e. >= 2
+        currSubtree = "(" + leftPart + ")" + str(root.data) + "(" + rightPart + ")"
+
+        if currSubtree in freq:
+            freq[currSubtree] += 1
         else:
-            dict1[currStr] = 1
-        
-        return currStr
-        
+            freq[currSubtree] = 1
+
+        return currSubtree
+
+
     def dupSub(self, root):
-        
-        dict1 = {}
-        self.duplicate_checker(root,dict1)
-        
-        for item in dict1:
-            if dict1[item] > 1:
-                return 1
-            
-        return 0
+
+        freq = {}
+        self.duplicateSubTree(root, freq)
+
+        for key in freq:
+            if freq[key] > 1:
+                return True
+        return False
+
