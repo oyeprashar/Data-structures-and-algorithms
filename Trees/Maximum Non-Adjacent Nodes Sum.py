@@ -1,6 +1,6 @@
 """
 Time complexity :
-    - Without memoisation : O(2^n) because there are two options at every node
+    - Without memoisation : O(2^n) because there are two options at every node (select node or dont select it)
     - With memoisation : O(n)
 """
 class Solution:
