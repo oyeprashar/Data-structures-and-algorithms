@@ -1,41 +1,48 @@
-class Node:
+"""
+Kth ancestor in binary tree
+"""
 
-    def __init__(self,data):
+class Node:
+    def __init__(self, data):
         self.data = data
         self.left = None
         self.right = None
 
-def getAncestor(root,key,k,currPath,ans):
+def getKthAncestorHelper(root, k, node, currPath, res):
 
-    if root == None:
-        return 
+    if root is None:
+        return
 
-    currPath.append(root.data)
-    getAncestor(root.left,key,k,currPath,ans)
-    getAncestor(root.right,key,k,currPath,ans)
+    if root.data == node:
+        ancestorIndex = len(currPath) - (k)
+        if ancestorIndex >= 0 and ancestorIndex < len(currPath):
+            res.append(currPath[ancestorIndex].data)
+        return
 
-    if root.data == key:
-        if len(currPath) < k:
-            ans[0] = -1
-        else:
-            ans[0] = currPath[len(currPath)-k-1]
-
-        return 
-
+    currPath.append(root)
+    getKthAncestorHelper(root.left, k, node, currPath, res)
+    getKthAncestorHelper(root.right, k, node, currPath, res)
     currPath.pop()
 
-def kthAncestor(root,key,k):
 
+
+def getKthAncestor(root, k, node):
     currPath = []
-    ans = [-1]
-    getAncestor(root,key,k,currPath,ans)
-    return ans[0]
+    res = []
+    getKthAncestorHelper(root, k, node, currPath, res)
 
+    if len(res) == 0:
+        return None
+
+    return res[0]
 
 root = Node(1)
 root.left = Node(2)
 root.left.left = Node(4)
 root.left.right = Node(5)
 root.right = Node(3)
+print(getKthAncestor(root, 2, 5))
 
-print(kthAncestor(root,5,2))
+
+
+
