@@ -1,48 +1,35 @@
+"""
+Input: arr[] = [40, 30, 35, 80, 100]
+Output: [35, 30, 100, 80, 40]
 
-class Node:
-    def __init__(self,data):
-        self.data = data
-        self.left = None
-        self.right = None
+Explanation: PreOrder: 40 30 35 80 100
+"""
 
-def inorder(root):
+INT_MIN = -3**38
+INT_MAX = 3**38
 
-    if root != None:
-        inorder(root.left)
-        print(root.data,end=" ")
-        inorder(root.right)
+class Solution:
+
+    def constructTree(self, currIndex, preorderArray, minValue, maxValue):
+
+        if currIndex[0] >= len(preorderArray):
+            return None
+            
+        currValue = preorderArray[currIndex[0]]
+
+        if currValue < minValue or currValue > maxValue:
+            return None
+
+        currNode = Node(currValue)
+        currIndex[0] += 1
+
+        currNode.left = self.constructTree(currIndex, preorderArray, minValue, currNode.data)
+        currNode.right = self.constructTree(currIndex, preorderArray, currNode.data, maxValue)
+
+        return currNode
 
 
-def insertBST(root,key):
-
-    if key < root.data:
-        if root.left == None:
-            root.left = Node(key)
-        else:
-            insertBST(root.left,key)
-
-    if key > root.data:
-        if root.right == None:
-            root.right = Node(key)
-        else:
-            insertBST(root.right,key)
-
-    return root
- 
-def constructBST(arr):
-
-    root = Node(arr[0])
-
-    for i in range(1,len(arr)):
-        key = arr[i]
-
-        root = insertBST(root,key)
-
-    return root
-
-    
-
-arr = [10, 5, 1, 7, 40, 50]
-root = constructBST(arr)
-print(inorder(root))
-
+    def preToBST(self, preorderArray):
+        currIndex = [0]
+        root = self.constructTree(currIndex, preorderArray, minValue = INT_MIN, maxValue = INT_MAX)
+        return root
