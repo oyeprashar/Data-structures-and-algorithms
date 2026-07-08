@@ -7,6 +7,10 @@ Approach :
   - if even number of flips are left, we can say we flip and flipped the number back (effectively no change) and return the sum. 
   - if we odd number of flip left, sort the array, flip the 0th index, return the sum
 
+
+Approach works because
+  1. if k > negCount <--- nice! We simply flip all the neg numbers
+  2. if k < negCount <--- okay, we flip what we can and k becomes zero!
 """
 
 
@@ -25,8 +29,8 @@ class Solution:
                 negCount += 1
                 
             index += 1
-                
-        
+
+      
         if negCount == k or (k - negCount) % 2 == 0:
             return sum(arr)
         
