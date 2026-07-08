@@ -1,37 +1,58 @@
-def maxProduct(arr):
+"""
+Approach :
 
-    neg_count = 0
-    zero_count = 0
-    product = 1
-    max_neg = -3**38
+for num in arr:
+    1. If the current number is neg, multiple it with product, keep track of count of negatives and the max of these negs
+    2. If the number is zero, DO NOT MULTIPLE and keep a count
+    3. Positives are always helpful and simply multiple them with the product
 
-    for num in arr:
+Approach to generate the final answer :
+    1. if all elements were zero return 0
+    2. if n - 1 elements were zero and one was neg, return zero
+    3. if there were odd number of neg, that means we need to remove the max neg to maximise the product
 
-        if num < 0:
-            max_neg = max(num,max_neg)
-            product *= num
-            neg_count += 1
-
-        elif num == 0:
-            zero_count += 1
-
-        else:
-            product *= num 
-
-
-    if zero_count == len(arr):
-        return 0
-
-    if zero_count == len(arr)-1 and neg_count == 1:
-        return 0
-
-    if neg_count % 2 != 0:
-        product /= max_neg
-
-    return product
     
-    
-arr = [-1, -1, -2, 4, 3]
-# arr = [ -1, 0]
-# arr = [0,0,0]
-print(maxProduct(arr))
+
+"""
+
+
+
+class Solution:
+    def findMaxProduct(self, arr):
+        
+        if len(arr) == 1:
+            return arr[0]
+
+        # positive numbers are always useful in maximising the product
+        product = 1
+        maxNeg = -3**38
+        negCount = 0
+        zeroCount = 0
+
+        for num in arr:
+
+            # handling the negative numbers
+            if num < 0:
+                maxNeg = max(maxNeg, num)
+                negCount += 1
+                product *= num
+                
+            # handling zeroes
+            elif num == 0:
+                zeroCount += 1
+
+            # handling positives
+            else:
+                product *= num
+                
+        if zeroCount == len(arr):
+            return 0
+        
+        if zeroCount == len(arr) - 1 and negCount == 1:
+            return 0
+        
+        if negCount % 2 == 1:
+            product = product // maxNeg
+
+        return product
+        
