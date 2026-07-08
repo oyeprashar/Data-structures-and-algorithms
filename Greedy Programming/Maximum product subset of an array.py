@@ -10,9 +10,6 @@ Approach to generate the final answer :
     1. if all elements were zero return 0
     2. if n - 1 elements were zero and one was neg, return zero
     3. if there were odd number of neg, that means we need to remove the max neg to maximise the product
-
-    
-
 """
 
 
