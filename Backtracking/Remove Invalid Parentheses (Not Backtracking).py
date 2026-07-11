@@ -1,49 +1,62 @@
 """
-Remove Invalid Parentheses
-Example 1:
-
-Input: s = "()())()"
-Output: ["(())()","()()()"]
-
-Algo:
--> We need find out the number of brackets which are wrong, call it k
--> this is the minmium number of brackets we can remove to make the string balanced
--> now we can remove k brackets to make it balance
-A string is balanced when minRemovals to make it balance == 0
+Approach is simple!
+    - Count the number of invalid brackets at each step
+    - Remove brackets from the string
+    - if number of removals needed == 0 and invalid brackets == 0, save it!
+    - Memoisation to skip already processed strings!
 """
 
-def minRemoval(str1):
-    stack = []
 
-    for bracket in str1:
-        if bracket == '(':
-            stack.append(bracket)
+class Solution:
 
-        elif bracket == ')':
-            if len(stack) == 0:
+    # O(N)
+    def countBracketsCausingImbalance(self, string):
+
+        stack = []
+        for bracket in string:
+
+            if bracket not in "()":
+                continue
+
+            if bracket == "(":
                 stack.append(bracket)
-            elif stack[-1] == ')':
-                stack.append(bracket)
-            elif stack[-1] == '(':
-                stack.pop()
-    return len(stack)
+            else:
+                if len(stack) != 0 and stack[-1] == "(":
+                    stack.pop()
+                else:
+                    stack.append(bracket)
 
-def generate(str1,ans,k):
+        return len(stack)
 
-    if k == 0 and minRemoval(str1) == 0:
-        ans.add(str1)
-        return
+    def generateBracketStrings(self, string, numberOfRemovals, ans, visited):
 
-    for i in range(len(str1)):
-        newStr = str1[:i] + str1[i+1:]
-        generate(newStr,ans,k-1)
+        # memoisation!
+        if string in visited:
+            return
 
-def getBrackets(str1):
-    k = minRemoval(str1)
-    ans = set()
-    generate(str1,ans,k)
-    return ans
+        # we found a valid string
+        if numberOfRemovals == 0 and self.countBracketsCausingImbalance(string) == 0:
+            ans.add(string)
+            return
 
-str1 = "()())()"
-print(getBrackets(str1))
+        if numberOfRemovals == 0:
+            return
 
+        for i in range(len(string)):
+            if string[i] in "()":
+                newString = string[:i] + string[i+1:] # this is slicing and not direct indexing, so even when i >= len(s), no error is thrown and "" is returned
+                self.generateBracketStrings(newString, numberOfRemovals - 1, ans, visited)
+
+        visited.add(string)
+
+    # O(n^2)
+    def removeInvalidParentheses(self, s):
+        minRemoval = self.countBracketsCausingImbalance(s)
+        ans = set()
+        self.generateBracketStrings(s, minRemoval, ans, visited = set())
+        return list(ans)
+
+s = Solution()
+print(s.removeInvalidParentheses("()())()"))
+print(s.removeInvalidParentheses("(a)())()"))  # This is wrong
+print(s.removeInvalidParentheses(")("))
