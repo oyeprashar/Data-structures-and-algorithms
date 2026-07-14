@@ -2,6 +2,8 @@
     Approach :
         - Recursively remove elements from the stack until there is no more element
         - Now insert the element st index zero goes to the end of the stack
+
+        
 """
 
 class Solution:
@@ -38,7 +40,7 @@ class Solution:
 
         # insert it at the last of the stack
 
-
+    # O(n^2)
     def reverseStack(self, stack):
         self.reverseStackHelper(stack)
         return stack
