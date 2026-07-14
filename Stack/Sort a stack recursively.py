@@ -1,35 +1,30 @@
 """
-Recursively sort a stack
-"""
-def sortStack(stack):
-    
-    if len(stack) == 0:
-        return 
-    
-    currData = stack.pop()
-    sortStack(stack) 
-    
-    if len(stack) == 0:
-        stack.append(currData)
-    
-    else:
+Time complexity : O(N^2)
 
-        if currData > stack[-1]:
-            stack.append(currData)
-        
+This is because everytime a call returns from the recursion stack, we can go and remove element from the stack so n*n
+"""
+
+class Solution:
+    def sortStack(self, stack):
+
+        if len(stack) == 0:
+            return
+
+        top = stack.pop()
+        self.sortStack(stack)
+
+        if len(stack) == 0 or top >= stack[-1]:
+            stack.append(top)
+
         else:
             poppedStack = []
-            while len(stack) > 0 and currData < stack[-1]:
+
+            while len(stack) > 0 and top < stack[-1]:
                 poppedStack.append(stack.pop())
-            
-            stack.append(currData)
+
+            stack.append(top)
 
             while len(poppedStack) > 0:
                 stack.append(poppedStack.pop())
 
-stack = [11,2,32,3,41]
-
-sortStack(stack)
-
-print(stack)
-
+        return stack
