@@ -2,8 +2,6 @@
     Approach :
         - Recursively remove elements from the stack until there is no more element
         - Now insert the element st index zero goes to the end of the stack
-
-        
 """
 
 class Solution:
