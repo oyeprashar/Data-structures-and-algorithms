@@ -24,19 +24,20 @@ def countOperations(arr):
             j -= 1
             count += 1
 
+    # print(arr)
     return count
 
-arr = [15, 4, 15]
-print(countOperations(arr))
+# arr = [15, 4, 15]
+# print(countOperations(arr))
 
-arr = [1, 4, 5, 1]
-print(countOperations(arr))
+# arr = [1, 4, 5, 1]
+# print(countOperations(arr))
 
 arr = [11, 14, 15, 99]
 print(countOperations(arr))
 
-arr = [1, 4, 5, 9, 1]
-print(countOperations(arr))
+# arr = [1, 4, 5, 9, 1]
+# print(countOperations(arr))
 
 
 
