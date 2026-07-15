@@ -30,7 +30,7 @@ class MaxStack:
 
         # pop is working fine now
         if len(self.stack) == 0:
-            return "Stack is empty"
+            return "Stack and Queue is empty"
 
         elif self.stack[-1] > self.maxEle:
             orgValue = self.maxEle

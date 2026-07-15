@@ -1,7 +1,7 @@
 '''
-Stack reverses the order of element
+Stack and Queue reverses the order of element
 In a Queue the order remains the same
-Stack class is implemented
+Stack and Queue class is implemented
 '''
 class Stack():
     def __init__(self):

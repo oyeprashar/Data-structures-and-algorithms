@@ -1,5 +1,5 @@
 '''
-Stack reverses the order of element
+Stack and Queue reverses the order of element
 In a Queue the order remains the same
 List is used as stack in this
 '''
