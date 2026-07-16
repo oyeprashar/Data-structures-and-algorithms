@@ -23,10 +23,12 @@ class Solution:
             while len(dq) > 0 and dq[0] <= i - k:
                 dq.popleft()
 
-            # remove the smaller elements
+            # remove the smaller elements as they are not useful once
+            # a bigger element comes
             while len(dq) > 0 and arr[dq[-1]] <= arr[i]:
                 dq.pop()
 
+            # append the current index
             dq.append(i)
 
             if i >= k - 1:
