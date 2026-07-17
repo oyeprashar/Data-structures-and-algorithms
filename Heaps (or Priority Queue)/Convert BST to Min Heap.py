@@ -6,7 +6,6 @@ Approach :
     3. Now we want to overwrite the data s.t the parent is smaller than children (min heap)
        This can be done if we overwrite the original BST with inorder data in preorder, this ensures that we are using
        the smaller elements first and the parent will be smaller than the child. Smallest at the root of the tree.
-
 """
 
 class Node:
