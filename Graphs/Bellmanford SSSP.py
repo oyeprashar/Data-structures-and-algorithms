@@ -1,37 +1,57 @@
 """
-Bellman Ford (handles -ve edges)
+Implement bellman-ford
 
-Unlike Dijkstra, we DONT keep visited  and relax all the edges for V times
-"""
+Difference in Dijkstra and Bellman-Ford
 
-INT_MAX = 3**38
+    * Dijkstra
 
-def bellman_ford(edges, number_of_nodes, src):
+        for _ in range(V):
+            1. Pick the min unvisited node, mark it visited
+            2. Relax its nbrs
 
-    distance = [INT_MAX] * number_of_nodes
-    distance[src] = 0
+    * Bellman-Ford
 
+        for _ in range(V - 1):
+            for edge in edges:
+                relax
 
-    for _ in range(number_of_nodes):
+        # and use the one pass to detect neg cycle if weights are still decrease
         for edge in edges:
+                relax
+"""
+INT_MAX = 3 ** 38
+
+class Solution:
+
+
+    def bellmanFord(self, V, edges, src):
+        # code here
+
+        dist = [INT_MAX] * V
+        dist[src] = 0
+
+        for _ in range(V - 1):
+
+            for edge in edges:
+
+                u = edge[0]
+                v = edge[1]
+                edgeCost = edge[2]
+
+                """
+                if dist[u] == INT_MAX, it means node u is not reachable (atleast yet),
+                relaxing V will make it wrong if the edge weight is negative
+                """
+                if dist[u] != INT_MAX and dist[u] + edgeCost < dist[v]:
+                    dist[v] = dist[u] + edgeCost
+
+        for edge in edges:
+
             u = edge[0]
             v = edge[1]
-            cost = edge[2]
+            edgeCost = edge[2]
 
-            if distance[u] != INT_MAX:
-                distance[v] = min( distance[v], distance[u] + cost)
+            if dist[u] != INT_MAX and dist[u] + edgeCost < dist[v]:
+                return "Negative Cycle Found"
 
-
-    # another loop to detect negative cycle
-    for edge in edges:
-        u = edge[0]
-        v = edge[1]
-        cost = edge[2]
-
-        if distance[u] + cost < distance[v]:
-            return "negative cycle found"
-
-
-    return distance
-
-
+        return dist
