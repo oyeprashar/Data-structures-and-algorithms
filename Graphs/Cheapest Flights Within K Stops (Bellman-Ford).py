@@ -2,9 +2,7 @@
     src -> layover -> dst
     k means the number of stops between src and dst, and the edges needed to process it is k + 1
 
-
     Approach :
-
         1. We need to make sure that the weights are not propagated across the nodes, and we need to control this
            layer by layer. <--- To ensure the k stops constraint
         2. To make sure that the new weights are not affecting other weights, we do not write directly to min dist.
@@ -19,7 +17,6 @@ INT_MAX = 3 ** 38
 
 class Solution:
     def findCheapestPrice(self, n, flights, src, dst, k):
-
         minDist = [INT_MAX] * n
         temp = [INT_MAX] * n
         minDist[src] = 0
@@ -43,5 +40,3 @@ class Solution:
             return -1
 
         return minDist[dst]
-
-
