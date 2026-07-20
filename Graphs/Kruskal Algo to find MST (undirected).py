@@ -44,11 +44,13 @@ class DisjointSet:
 class Solution:
     def kruskalsMST(self, V, edges):
 
+        # O(eloge)
         edges.sort(key = lambda x:x[2])
         numberOfMerges = 0
         cost = 0
         dsu = DisjointSet(V)
 
+        # O(eloge)
         for edge in edges:
 
             u = edge[0]

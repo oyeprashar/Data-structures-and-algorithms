@@ -28,6 +28,8 @@ class Solution:
         totalCost = 0
         visited = set()
 
+        # TC : O(eloge) because we are processes the edges in the heap
+        #      len(visited) < V also depends on these edges
         while len(minHeap) > 0 and len(visited) < V:
 
             top = heapq.heappop(minHeap)
