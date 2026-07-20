@@ -1,60 +1,65 @@
 """
-Prims algo
+**** Implement prims ****
+
+Algo
+	1. use a min heap (vertex, cost)
+	2. While we have not selected all the vertices
+		i. pop the top of min heap
+	   ii. if not in visited, add to visited, add the cost
+	  iii. Loop over the nbrs, and add them to heap if they are not visited
+
+
 """
+
+import heapq
 from collections import defaultdict
-INT_MAX = 3**38
 
-class Graph:
+class Item:
 
-	def __init__(self,V):
-		self.V = V
-		self.vertList = defaultdict(list)
-	
-	def addEdge(self,u,v,cost):
-		self.vertList[u].append((v,cost))
-		self.vertList[v].append((u,cost))
+    def __init__(self, vertex, cost):
+        self.vertex = vertex
+        self.cost = cost
 
-	def pickMinVertex(self,value,visited):
+    def __lt__(self, other):
+        return self.cost <= other.cost
 
-		selected = None
-		minCost = 3**38
 
-		for v in range(len(value)):
-			if value[v] < minCost  and v not in visited:
-				selected = v
-				minCost = value[v]
-		
-		return selected
+class Solution:
+    def spanningTree(self, V, edges):
 
-	def prims(self):
+        adj = defaultdict(list)
 
-		value = [INT_MAX] * self.V 
-		value[0] = 0 
-		
-		visited = set()
+        for edge in edges:
+            u = edge[0]
+            v = edge[1]
+            edgeCost = edge[2]
+            adj[u].append([v, edgeCost])
+            adj[v].append([u, edgeCost])
 
-		for _ in range(self.V):
+        print("adj :",adj)
 
-			currV = self.pickMinVertex(value,visited)
-			visited.add(currV)
+        minHeap = []
+        heapq.heappush(minHeap, Item(0, 0))
+        totalCost = 0
+        visited = set()
 
-			for list1 in self.vertList[currV]:
+        while len(minHeap) > 0 and V != 0:
 
-				nbr = list1[0]
-				edgeCost = list1[1]
+            top = heapq.heappop(minHeap)
 
-				if nbr not in visited:
-					value[nbr] = min(value[nbr],edgeCost)
-		
-		return value,sum(value)
-				
-g = Graph(4)
-g.addEdge(0,1,3)
-g.addEdge(0,2,1)
-g.addEdge(1,2,2)
-g.addEdge(1,3,4)
-g.addEdge(2,3,5)
-print(g.prims())
-				
+            totalCost += top.cost
+            visited.add(top.vertex)
+            V -= 1
 
-			
+            if V == 0:
+                return totalCost
+
+            for nbr in adj[top.vertex]:
+
+                if nbr[0] not in visited:
+                    heapq.heappush(minHeap, Item(nbr[0], nbr[1]))
+
+        return totalCost
+
+s = Solution()
+print(s.spanningTree(V = 3, edges = [[0, 1, 5], [1, 2, 3], [0, 2, 1]]))
