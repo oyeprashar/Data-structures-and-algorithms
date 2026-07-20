@@ -1,85 +1,69 @@
 """
-Kruskal MST
-g = Graph(4)
-g.addEdge(0, 1, 10)
-g.addEdge(0, 2, 6)
-g.addEdge(0, 3, 5)
-g.addEdge(1, 3, 15)
-g.addEdge(2, 3, 4)
+***** Kruskal MST Algo (greedy) *****
+
+Algorithm
+    1. sort the edges based on the weights in ascending order
+    2. loop through these and pick the edges that are not forming loop (use DSU to check loops)
+    3. return the total cost once we have N - 1 edges
 """
 
-from ast import parse
+class DisjointSet:
 
+    def __init__(self, size):
+        self.parent = [-1] * size
+        self.rank = [1] * size
 
-def find(num, parentList):
-    if parentList[num] == -1:
-        return num 
-    
-    parentList[num] = find(parentList[num],parentList)
+    # O(logn) because of path compression through rank
+    def findParent(self, element):
 
-    return parentList[num]
+        if self.parent[element] == -1:
+            return element
 
-def union(num1, num2, rankList, parentList):
+        return self.findParent(self.parent[element])
 
-    parent1 = find(num1, parentList)
-    parent2 = find(num2, parentList)
+    def union(self, element1, element2):
 
-    if parent1 != parent2:
-        # smaller rank ka parent is element with bigger rank
-        if rankList[parent2] < rankList[parent1]:
-            parentList[parent2] = parent1
-            rankList[parent1] += rankList[parent2]
-        
+        parent1 = self.findParent(element1)
+        parent2 = self.findParent(element2)
+
+        if parent1 == parent2:
+            return
+
+        rank1 = self.rank[parent1]
+        rank2 = self.rank[parent2]
+
+        # parent of smaller rank is the guy with bigger rank
+        if rank1 > rank2:
+            self.parent[parent2] = parent1
+            self.rank[parent1] += self.rank[parent2]
+
         else:
-            parentList[parent1] = parent2
-            rankList[parent2] += rankList[parent1]
+            self.parent[parent1] = parent2
+            self.rank[parent2] += self.rank[parent1]
 
-class Graph:
-    def __init__(self,V):
-        self.V = V
-        self.vertList = []
-    
-    def addEdge(self,u,v,cost):
-        self.vertList.append((u,v,cost))
-    
-    def kruskal(self):
+class Solution:
+    def kruskalsMST(self, V, edges):
 
-        print(self.vertList)
-
-        parentList = [-1] * self.V
-        rankList = [1] * self.V
-        count = 0 
-        index = 0 
+        edges.sort(key = lambda x:x[2])
+        numberOfMerges = 0
         cost = 0
-        self.vertList.sort(key = lambda list1 : list1[2])
+        dsu = DisjointSet(V)
 
-        while count != self.V - 1 and index < len(self.vertList):
-            
-            list1 = self.vertList[index]
-            u = list1[0]
-            v = list1[1]
-            currCost = list1[2]
+        for edge in edges:
 
-            parent1 = find(u,parentList)
-            parent2 = find(v,parentList)
-        
+            u = edge[0]
+            v = edge[1]
+            edgeCost = edge[2]
+
+            parent1 = dsu.findParent(u)
+            parent2 = dsu.findParent(v)
+
             if parent1 != parent2:
-                print("picking up edge between",u,v,"with cost =",currCost)
-                count += 1 
-                union(parent1,parent2,rankList,parentList)
-                cost += currCost
+                dsu.union(parent1, parent2)
+                cost += edgeCost
+                numberOfMerges += 1
 
-            index += 1
+            if numberOfMerges == V - 1:
+                return cost
 
         return cost
-        
-
-g = Graph(4)
-g.addEdge(0, 1, 10)
-g.addEdge(0, 2, 6)
-g.addEdge(0, 3, 5)
-g.addEdge(1, 3, 15)
-g.addEdge(2, 3, 4)
-
-
-print(g.kruskal())
