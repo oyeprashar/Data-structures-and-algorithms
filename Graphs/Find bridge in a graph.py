@@ -1,130 +1,86 @@
 """
-Finding bridges in a graph
+***** Find bridges in the graph *****
 
->> Method1
-One by one remove each edge and see if it increases the components of the graph | Time complexity = O(E*(V+E))
-(COMMENTED CODE)
+    What is a bridge?
+    An edge whose removal will cause disconnected components
 
->> Method2
-Finding out if a node can be visited from some other path if it cannot than there is a bridge 
-(CODE WITH BETTER IN FUNCTION NAME)
-
-""" 
-from collections import defaultdict 
-
-class Graph:
-	
-	def __init__(self,V):
-		self.V = V
-		self.vertList = defaultdict(list)
-	
-	def addEdge(self,u,v):
-		self.vertList[u].append(v)
-		self.vertList[v].append(u)
-
-	
-	
-	# def DFS(self,currV,exNode1,exNode2,visited):
-
-	# 	visited.add(currV)
-	
-	# 	for nbr in self.vertList[currV]:
-			
-	# 		if nbr not in visited:
-	# 			if (currV == exNode1 and nbr == exNode2) or (currV == exNode2 and nbr == exNode1):
-	# 				continue 
-	# 			else:
-	# 				self.DFS(nbr,exNode1,exNode2,visited)
-
-			
-	# def countComponents(self,exNode1,exNode2):
-
-	# 	count = 0
-	# 	visited = set()
-
-	# 	for currV in range(self.V):
-	# 		if currV not in visited:
-	# 			count += 1
-	# 			self.DFS(currV,exNode1,exNode2,visited)
+    A more technical understanding of bridge :
+    Lets say we are using DFS to discover the nodes. If there is a back edge that lets me jump back from node N to
+    an ancestor Node B, then there is no bridge as there is more than one path. If there is no back edge then there is
+    a bridge.
 
 
-	# 	return count
+    The problem on GFG:
+    The problem is asking us to figure out if there is a bridge between two nodes source and destination in the graph
 
-	# def countBridges(self):
-	# 	ans = []
+"""
+from collections import defaultdict
 
-	# 	for node1 in self.vertList:
-	# 		for node2 in self.vertList[node1]:
-	# 			currCount = self.countComponents(node1,node2)
-	# 			if currCount > 1:
-	# 				ans.append([node1,node2])
-			
-	# 	return sorted(ans)
+class Solution:
 
-	def findBridgesHelper(self,currV,currTime,initialTime,shortestTime,parent,visited):
+    def findBridgesDFS(self, currV, adj, visited, initialTime, shortestTime, currTime, parent, source, destination):
 
-		visited.add(currV)
-		initialTime[currV] = currTime[0]
-		shortestTime[currV] = currTime[0]
+        visited.add(currV)
+        initialTime[currV] = currTime[0]
+        shortestTime[currV] = currTime[0]
+        currTime[0] += 1
 
-		currTime[0] += 1
+        for nbr in adj[currV]:
+
+            # We just came from this nbr to currV
+            if nbr == parent[currV]:
+                continue
+
+            if nbr not in visited:
+
+                parent[nbr] = currV
+
+				# early return!
+				if self.findBridgesDFS(nbr, adj, visited, initialTime, shortestTime, currTime, parent, source, destination):
+					return True
+
+				# if there was a back-edge that nbr found, currV can use that back-edge too and hence we update its time
+                shortestTime[currV] = min(shortestTime[currV], shortestTime[nbr])
 
 
-		for nbr in self.vertList[currV]:
-			if nbr not in visited:
-				parent[nbr] = currV
-				self.findBridgesHelper(nbr,currTime,initialTime,shortestTime,parent,visited)
+				# No back edge, we need to go through currV to reach nbr and thats a bridge
+                if shortestTime[nbr] > initialTime[currV]:
 
-		for nbr in self.vertList[currV]:
-			if parent[currV] != nbr:
-				shortestTime[currV] = min(shortestTime[currV],shortestTime[nbr])
-				if shortestTime[nbr] > initialTime[currV]:
-					# there is no another path and there is a single
-					# edge here!!!
+					# Since the question wants use to return true only if the bridge is between these specific nodes
+                    if (currV == source and nbr == destination) or (currV == destination and nbr == source):
+						return True
 
-					print("Bridge found between",currV,"and",nbr)
 
-	def findBridgesBetter(self):
-		currTime = [1]
-		initialTime = [3**38] * self.V
-		shortestTime = [3**38] * self.V 
-		visited = set()
-		parent = [None] * self.V 
-		self.findBridgesHelper(0,currTime,initialTime,shortestTime,parent,visited)
-		# print(initialTime)
-		# print(shortestTime)
+			# nbr is already visited and not parent of currV
+            # This means back edge to an ancestor!
+            else:
 
-	
-g1 = Graph(5)
-g1.addEdge(1, 0)
-g1.addEdge(0, 2)
-g1.addEdge(2, 1)
-g1.addEdge(0, 3)
-g1.addEdge(3, 4)
- 
-  
-print("Bridges in first graph ")
-g1.findBridgesBetter()
- 
-g2 = Graph(4)
-g2.addEdge(0, 1)
-g2.addEdge(1, 2)
-g2.addEdge(2, 3)
-print("\nBridges in second graph ")
-g2.findBridgesBetter()
- 
-  
-g3 = Graph (7)
-g3.addEdge(0, 1)
-g3.addEdge(1, 2)
-g3.addEdge(2, 0)
-g3.addEdge(1, 3)
-g3.addEdge(1, 4)
-g3.addEdge(1, 6)
-g3.addEdge(3, 5)
-g3.addEdge(4, 5)
-print("\nBridges in third graph ")
-g3.findBridgesBetter()
+				# initial time of nbr because it can still be in the recursive stack
+                shortestTime[currV] = min(shortestTime[currV], initialTime[nbr])
+
+		return False
+
+	def isBridge(self, V, edges, source, destination):
 
 
 
+        adj = defaultdict(list)
+
+        for edge in edges:
+            u = edge[0]
+            v = edge[1]
+            adj[u].append(v)
+            adj[v].append(u)
+
+        initialTime = [-1] * V
+        shortestTime = [-1] * V
+        currTime = [0]
+        parent = [-1] * V
+        visited = set()
+
+        for currV in range(V):
+            if currV not in visited:
+                if self.findBridgesDFS(currV, adj, visited, initialTime, shortestTime, currTime, parent, source, destination):
+                    return True
+
+        return False
