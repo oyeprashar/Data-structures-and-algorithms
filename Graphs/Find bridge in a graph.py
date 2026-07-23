@@ -13,12 +13,30 @@
     The problem on GFG:
     The problem is asking us to figure out if there is a bridge between two nodes source and destination in the graph
 
+
+    Example
+
+                  0
+                  |
+                  1
+                 / \
+                2   3
+                 \ /
+                  4
+
+    - Let's say DFS is running, and current recursion stack is 0 -> 1 -> 2 -> 4 -> 3
+    - At 3, we have a nbr 1 which is already visited, but it is not parent of 3 and hence a back edge.
+    - But since this nbr 1 is still in the call stack its shortest time is not finalised and only intial time is final
+    - We update the shortest time of 3 with the initial time of 1
+
+    - IMP : if a parent's child is connected to some ancestor, the shortest time is update in all the nodes connected in
+            this subtree as these nodes can reach the ancestor as well.
 """
 from collections import defaultdict
 
 class Solution:
 
-    def findBridgesDFS(self, currV, adj, visited, initialTime, shortestTime, currTime, parent, source, destination):
+    def isBridgeDFS(self, currV, adj, visited, initialTime, shortestTime, currTime, source, destination, parent):
 
         visited.add(currV)
         initialTime[currV] = currTime[0]
@@ -27,42 +45,32 @@ class Solution:
 
         for nbr in adj[currV]:
 
-            # We just came from this nbr to currV
-            if nbr == parent[currV]:
+            # parent of currV is nbr
+            if parent[currV] == nbr:
                 continue
 
             if nbr not in visited:
 
                 parent[nbr] = currV
 
-				# early return!
-				if self.findBridgesDFS(nbr, adj, visited, initialTime, shortestTime, currTime, parent, source, destination):
-					return True
+                if self.isBridgeDFS(nbr, adj, visited, initialTime, shortestTime, currTime, source, destination, parent):
+                    return True
 
-				# if there was a back-edge that nbr found, currV can use that back-edge too and hence we update its time
+                # If my child can reach an earlier node, then I can reach it through my child.
                 shortestTime[currV] = min(shortestTime[currV], shortestTime[nbr])
 
-
-				# No back edge, we need to go through currV to reach nbr and thats a bridge
+               # bridge detected
                 if shortestTime[nbr] > initialTime[currV]:
+                    if (nbr == source and currV == destination) or (nbr == destination and currV == source):
+                        return True
 
-					# Since the question wants use to return true only if the bridge is between these specific nodes
-                    if (currV == source and nbr == destination) or (currV == destination and nbr == source):
-						return True
-
-
-			# nbr is already visited and not parent of currV
-            # This means back edge to an ancestor!
+            # back edge found as we found a node that was already visited and not parent of currV
             else:
-
-				# initial time of nbr because it can still be in the recursive stack
                 shortestTime[currV] = min(shortestTime[currV], initialTime[nbr])
 
-		return False
+        return False
 
-	def isBridge(self, V, edges, source, destination):
-
-
+    def isBridge(self, V, edges, source, destination):
 
         adj = defaultdict(list)
 
@@ -72,15 +80,16 @@ class Solution:
             adj[u].append(v)
             adj[v].append(u)
 
+        visited = set()
         initialTime = [-1] * V
         shortestTime = [-1] * V
         currTime = [0]
         parent = [-1] * V
-        visited = set()
 
+        # Handles the disconnected component
         for currV in range(V):
-            if currV not in visited:
-                if self.findBridgesDFS(currV, adj, visited, initialTime, shortestTime, currTime, parent, source, destination):
-                    return True
+            if currV not in visited and self.isBridgeDFS(currV, adj, visited, initialTime, shortestTime, currTime, source, destination, parent):
+                return True
+
 
         return False
