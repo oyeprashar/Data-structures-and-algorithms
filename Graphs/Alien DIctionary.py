@@ -41,13 +41,13 @@ class Solution:
 
         return adj, True
 
-    def dfs(self, currV, visited, ordering, adj):
+    def dfsTopologicalSort(self, currV, visited, ordering, adj):
 
         visited.add(currV)
 
         for nbr in adj[currV]:
             if nbr not in visited:
-                self.dfs(nbr, visited, ordering, adj)
+                self.dfsTopologicalSort(nbr, visited, ordering, adj)
 
         ordering.append(currV)
 
@@ -59,6 +59,7 @@ class Solution:
             3. Return its topological sorted order
         """
 
+        # Step 1 : Generate the graph and check the validity of the ordering
         adj, isValid = self.generateGraph(words)
 
         if not isValid:
@@ -66,26 +67,30 @@ class Solution:
 
         ordering = []
         visited = set()
-
-        uniqueChars = set()
-        for word in words:
-            for char in list(word):
-                uniqueChars.add(char)
-
+        uniqueChars = self.getUniqueChars(words)
         currPath = set()
         cycleVisited = set()
 
+        # Step 2 : Cycle check in the directed graph
         for currV in uniqueChars:
             if currV not in cycleVisited:
                 if self.cycleDetectionDirected(currV, cycleVisited, currPath, adj):
                     return ""
 
-        # keys = adj.keys()
+        # Step 3 : Return its topological sorted order
         for currV in uniqueChars:
             if currV not in visited:
-                self.dfs(currV, visited, ordering, adj)
+                self.dfsTopologicalSort(currV, visited, ordering, adj)
 
         return ordering[::-1]
+
+    def getUniqueChars(self, words):
+        uniqueChars = set()
+        for word in words:
+            for char in list(word):
+                uniqueChars.add(char)
+        return uniqueChars
+
 
 s = Solution()
 print(s.findOrder(["ab", "cd", "ef", "ad"]))
