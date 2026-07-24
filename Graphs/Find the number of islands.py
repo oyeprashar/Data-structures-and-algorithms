@@ -1,39 +1,41 @@
-class Solution:
-    #all 8 directions.    
-    def DFS(self,i,j,grid,visited):
-        
-        if i < 0 or j < 0 or i >= len(grid) or j >= len(grid[0]):
-            return 
-    
-        if grid[i][j] == "0" or visited[i][j] == True:
-            return 
-    
-        visited[i][j] = True
-        self.DFS(i-1,j,grid,visited)    # up
-        self.DFS(i+1,j,grid,visited)    # down   
-        self.DFS(i,j-1,grid,visited)    # left
-        self.DFS(i,j+1,grid,visited)    # right
-        self.DFS(i-1,j-1,grid,visited)    # dia upper left
-        self.DFS(i-1,j+1,grid,visited)    # dia upper right
-        self.DFS(i+1,j-1,grid,visited)    # dia lower left
-        self.DFS(i+1,j+1,grid,visited)    # dia lower right
-        
-    def numIslands(self, grid: List[List[str]]) -> int:
-        
-        visited = []
+"""
+The time complexity is O(n*m) because even if the whole mat is an island, we explore it once and not for every
+iteration of outer nested loops.
+"""
 
-        for x in range(len(grid)):
-            list1 = []
-            for y in range(len(grid[0])):
-                list1.append(False)
-            visited.append(list1)
+class Solution:
+
+    def countNumIslands(self, i, j, grid, directions):
+
+        if i < 0 or i >= len(grid) or j < 0 or j >= len(grid[0]):
+            return
+
+        if grid[i][j] != "1":
+            return
+
+        grid[i][j] = "2"
+        for dir in directions:
+            self.countNumIslands(i + dir[0], j + dir[1], grid, directions)
+
+    def numIslands(self, grid):
 
         count = 0
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+
         for i in range(len(grid)):
             for j in range(len(grid[0])):
-
-                if grid[i][j] == "1" and visited[i][j] == False:
-
+                if grid[i][j] == "1":
                     count += 1
-                    self.DFS(i,j,grid,visited)
+                    self.countNumIslands(i, j, grid, directions)
+
         return count
+
+grid = [
+      ["1","1","1","1","0"],
+      ["1","1","0","1","0"],
+      ["1","1","0","0","0"],
+      ["0","0","0","0","0"]
+    ]
+
+s = Solution()
+print(s.numIslands(grid))
