@@ -1,53 +1,41 @@
 class Solution:
     def ladderLength(self, beginWord, endWord, wordList):
-        
-        wordSet = set()
-        endPresent = False
 
-        for word in wordList:
-            if word == endWord:
-                endPresent = True 
-            wordSet.add(word)
+        wordSet = set(wordList)
+        if endWord not in wordSet:
+            return 0
 
-        if endPresent == False:
-            return 0 
-
-        count = 0
         queue = [beginWord]
+        levels = 0
         visited = set()
         visited.add(beginWord)
 
         while len(queue) > 0:
 
-            size = len(queue)
-            count += 1
+            levels += 1
 
-            for _ in range(size):
+            for _ in range(len(queue)):
 
-                str1 = queue.pop(0)
-                arr = [char for char in str1]
+                currWord = queue.pop(0)
+                currWordList = list(currWord)
 
-                for i in range(len(arr)):
-                    for j in range(ord('a'),ord('z')+1):
+                for i in range(len(currWordList)):
+
+                    for j in range(ord('a'), (ord('z') + 1)):
 
                         newChar = chr(j)
-                        orgChar = arr[i]
-                        arr[i] = newChar
-                        newStr = "".join(arr)
-                        
-                        if newStr == str1:
-                            continue
-                        
-                        if newStr == endWord:
-                            # plus one because we want to include the begin word
-                            return count + 1
-                        
-                    
-                        if newStr in wordSet and newStr not in visited:
-                            queue.append(newStr)
-                            visited.add(newStr)
+                        orgChar = currWordList[i]
+                        currWordList[i] = newChar
 
-                        arr[i] = orgChar
+                        newWord = "".join(currWordList)
 
-        # if we were not able to travese from the begin word to the end word as per the logic               
+                        if newWord in wordSet and newWord not in visited:
+                            queue.append(newWord)
+                            visited.add(newWord)
+
+                        if newWord == endWord:
+                            return levels + 1
+
+                        currWordList[i] = orgChar
+
         return 0
