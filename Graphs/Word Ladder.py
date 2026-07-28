@@ -1,3 +1,11 @@
+"""
+Time complexity analysis :
+    - let N be the number of words
+    - let L be the len of the word (len is same for the words)
+
+"""
+
+
 class Solution:
     def ladderLength(self, beginWord, endWord, wordList):
 
@@ -10,6 +18,8 @@ class Solution:
         visited = set()
         visited.add(beginWord)
 
+        # O(N * L * L) = O(N * L^2)
+        # This will run N times
         while len(queue) > 0:
 
             levels += 1
@@ -19,6 +29,7 @@ class Solution:
                 currWord = queue.pop(0)
                 currWordList = list(currWord)
 
+                # This will run L times
                 for i in range(len(currWordList)):
 
                     for j in range(ord('a'), (ord('z') + 1)):
@@ -27,6 +38,7 @@ class Solution:
                         orgChar = currWordList[i]
                         currWordList[i] = newChar
 
+                        # This is O(L) as well
                         newWord = "".join(currWordList)
 
                         if newWord in wordSet and newWord not in visited:
