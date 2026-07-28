@@ -3,6 +3,19 @@ from collections import defaultdict
 
 class Solution:
 
+    """
+    *** Time complexity analysis ***
+
+        - Branching factor : m because you try m colors for each node
+        - Recursion depth : This is done V times (recursion depth) since we want to color all the V nodes
+        - Work done per call : V because there can be V-1 nbrs in the worst case
+
+        Time complexity = ((branching_factor)^recursion_depth) * work_done_per_call
+                        = O(m^v * v)
+
+        Space complexity : O(V) for tracking colors
+    """
+
     def isColoringPossible(self, currV, adj, m, color, v):
 
         if currV == v:

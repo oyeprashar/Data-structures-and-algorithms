@@ -1,48 +1,42 @@
+"""
+This is the best possible code! We used the generic m-coloring to do bi-partite.
+"""
+
+
+from collections import defaultdict
+
+
 class Solution:
-    
-    def isPossible(self,src,colored,adj):
 
-        queue = [src]
+    def isBipartitePossible(self, currV, adj, color, V, m):
 
-        while len(queue) > 0:
+        if currV == V:
+            return True
 
-            currV = queue.pop(0)
+        for candidate_color in range(m):
 
-            availableCOlor = [True,True]
-
+            candidate_color_available = True
             for nbr in adj[currV]:
 
-                if colored[nbr] == -1:
-                    queue.append(nbr)
+                if color[nbr] == candidate_color:
+                    candidate_color_available = False
+                    break
 
-                else:
-                    if colored[nbr] == 0:
-                        availableCOlor[0] = False
+            if candidate_color_available:
+                color[currV] = candidate_color
+                if self.isBipartitePossible(currV + 1, adj, color, V, m):
+                    return True
+                color[currV] = -1
 
-                    elif colored[nbr] == 1:
-                        availableCOlor[1] = False
+        return False
 
-            selectedColor = None
-            for i in range(len(availableCOlor)):
-                if availableCOlor[i] == True:
-                    selectedColor = i
-                    break 
 
-            if selectedColor == None:
-                return False
+    def isBipartite(self, V, edges):
+        adj = defaultdict(list)
 
-            colored[currV] = selectedColor 
+        for edge in edges:
+            adj[edge[0]].append(edge[1])
+            adj[edge[1]].append(edge[0])
 
-        return True 
-        
-    def isBipartite(self, V, adj):
-        
-        n = len(adj)
-        colored = [-1] * n 
-
-        for currV in range(n):
-            if colored[currV] == -1:
-                if self.isPossible(currV,colored,adj) == False:
-                    return False 
-
-        return True 
+        color = [-1] * (V + 1)
+        return self.isBipartitePossible(0, adj, color, V, m = 2)
