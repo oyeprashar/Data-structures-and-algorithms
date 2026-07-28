@@ -1,45 +1,43 @@
+from collections import defaultdict
 
-def completed(arr):
-    for x in arr:
-        if x == -1:
-            return False
-    return True
 
-def coloring(currV,V,k,mat,colored,ans):
+class Solution:
 
-    if completed(colored) == True:
-        ans[0] = True
-        return True
+    def isColoringPossible(self, currV, adj, m, color, v):
 
-    if currV == V:
-        return 
+        if currV == v:
+            return True
 
-    for color in range(1,k+1):
-        possible = True
+        # we will try all the colors for the current node
+        for candidate_color in range(m):
 
-        for nbr in range(V):
-            if mat[currV][nbr] == 1 and colored[nbr] == color:
-                possible = False
+            # check if the nbrs are not using this color
+            color_available = True
+            for nbr in adj[currV]:
+                if color[nbr] == candidate_color:
+                    color_available = False
+                    break
 
-        if possible == True:
-            colored[currV] = color
-            if coloring(currV+1,V,k,mat,colored,ans) == True: # agar koi recursive call gets True, we will not search any more and return True
-                return True
-            colored[currV] = -1
+            # if the color is available, use it!
+            if color_available:
+                color[currV] = candidate_color
+                if self.isColoringPossible(currV + 1, adj, m, color, v): # move ahead to other nodes
+                    return True
 
-def graphColoring(graph, k, V):
-    
-    colored = [-1] * (V)
-    ans = [False]
-    currV = 0
-    coloring(currV,V,k,graph,colored,ans)
-    return ans[0]
+                color[currV] = -1 # uncolor to try other colors
 
-V = 4
-k = 1
-graph = [[0, 1, 1, 1],
-       [1, 0, 1, 0],
-       [1, 1, 0, 1],
-       [1, 0, 1, 0]]
+        return False
 
-print(graphColoring(graph,V,k))
+    def graphColoring(self, V, edges, m):
+
+        adj = defaultdict(list)
+
+        for edge in edges:
+            u = edge[0]
+            v = edge[1]
+            adj[u].append(v)
+            adj[v].append(u)
+
+        color = [-1] * (V + 1)
+
+        return self.isColoringPossible(0, adj, m, color, V)
