@@ -1,48 +1,47 @@
-from collections import defaultdict
-
 class Solution:
-    def minThrow(self, N, arr):
-        
-        specialThrows = {}
-        i = 0
-        
-        while i < len(arr):
-            specialThrows[arr[i]] = arr[i+1]
-            i += 2
 
-        adj = defaultdict(list)
+    def getCellIndex(self, cellNumber, n):
 
-        for cell in range(1,31):
-            for diceNumber in range(1,7):
-                
-                canReach = cell + diceNumber
-                
-                if canReach <= 30:
-                    
-                    if canReach in specialThrows:
-                        adj[cell].append(specialThrows[canReach])
-                    else:
-                        adj[cell].append(canReach)
-        
-        count = 0
-        
+        row = n - ((cellNumber - 1) // n) - 1
+        col = (cellNumber - 1) % n
+
+        if row % 2 == n % 2:
+            col = n - 1 - col
+
+        return row, col
+
+
+    def snakesAndLadders(self, board):
+
         queue = [1]
-        
-        while len(queue) > 0:
-            
-            size = len(queue)
-            count += 1
-            
-            for _ in range(size):
-                
-                curr = queue.pop(0)
-                
-                for nbr in adj[curr]:
-                    
-                    if nbr >= 30:
-                        return count 
-                    queue.append(nbr) 
-        
-        return -1 
-    
-                
+        visited = set()
+        visited.add(1)
+        levels = 0
+        n = len(board)
+        targetCell = n * n
+
+        while len(queue):
+
+            levels += 1
+
+            for _ in range(len(queue)):
+
+                currentCellNum = queue.pop(0)
+
+                for diceRoll in range(1, 7):
+
+                    newCellNumber = currentCellNum + diceRoll
+                    rowIndex, colIndex = self.getCellIndex(newCellNumber, n)
+
+                    # check for snake / ladder
+                    if board[rowIndex][colIndex] != -1:
+                        newCellNumber = board[rowIndex][colIndex]
+
+                    if newCellNumber >= targetCell:
+                        return levels
+
+                    if newCellNumber not in visited:
+                        visited.add(newCellNumber)
+                        queue.append(newCellNumber)
+
+        return -1
