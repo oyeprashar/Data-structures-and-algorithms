@@ -6,6 +6,20 @@ class Solution:
         col = (cellNumber - 1) % n
 
         if row % 2 == n % 2:
+            """
+            if the row is reversed the indices are 
+                original reversed 
+                    0       5
+                    1       4
+                    2       3
+                    3       2
+                    4       1
+                    5       0
+                    
+                col = (n - col) - 1 converts the original indices into the reversed indicesgi
+            """
+
+
             col = n - 1 - col
 
         return row, col
