@@ -1,16 +1,25 @@
-def find(element,parentArray):
-    if parentList[element] == -1:
-        return element
-    return find(parentList[element],parentList)
+class DisjointSet:
 
-def union(a,b,parentArray):
-    parentOfa = find(a,parentList)
-    parentOfb = find(b,parentList)
-    parentList[parentOfa] = parentOfb
+    def __init__(self, number_of_nodes):
+        self.rank = [1]  * number_of_nodes
+        self.parent = [-1] * number_of_nodes
 
-parentList = [0,-1,1,2,-1,4,6]
-print(find(4,parentList))
-print(parentList)
-union(4,1,parentList)
-print(parentList)
-print(find(4,parentList))
+    # Since rank is making the DS balanced the tc of find is O(logN) | Height of tree ≤ O(log N)
+    def find_parent(self, node):
+        if self.parent[node] == -1:
+            return node
+        return self.find_parent(self.parent[node])
+
+    # O(log N) since it is finding the parent and then changing the parent in O(1)
+    def union(self, node1, node2):
+        parent1 = self.find_parent(node1)
+        parent2 = self.find_parent(node2)
+        rank1 = self.rank[parent1]
+        rank2 = self.rank[parent2]
+
+        if rank1 > rank2:
+            self.parent[parent2] = parent1
+            self.rank[parent1] += self.rank[parent2]
+        else:
+            self.parent[parent1] = parent2
+            self.rank[parent2] += self.rank[parent1]
