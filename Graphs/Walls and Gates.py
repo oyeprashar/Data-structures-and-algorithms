@@ -1,5 +1,5 @@
 """
-LeetCode 286. Walls and Gates
+Walls and Gates
 
     You are given an m x n 2D grid rooms initialized with these three possible values:
 
