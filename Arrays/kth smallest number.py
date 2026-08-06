@@ -13,6 +13,9 @@ class Solution:
 
         maxHeap = []
 
+
+        # TC : O(nlogk)
+        # since the size of max heap is restricted to k, operation over it is O(logk) and we process all the in O(n)
         for i in range(len(arr)):
 
             heapq.heappush(maxHeap, -1 * arr[i])
