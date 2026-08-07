@@ -1,44 +1,29 @@
-# TIME COMPLEXITY = O(n) | SPACE COMPLEXITY = O(1)
-class Solution:
-    
-    def jump(self, nums: List[int]) -> int:
-        
-        jumps = 0
-        end = 0
-        farthest = 0
-        
-        for i in range(len(nums)-1):
-            
-            farthest = max(farthest,nums[i] + i)
-            
-            if i == end:
-                jumps += 1
-                end = farthest
-            
-        return jumps
-        
-# TIME COMPLEXITY = O(n^2) | SPACE COMPLEXITY = O(n)
+"""
+Here we don't count the jumps from the last index because
+
+    1. It is given that the last index is reachable
+    2 There can be a case where the chunk ends at the last index and we start a new chunk from it returning a wrong ans
+"""
+
 
 class Solution:
-    def jump(self, nums: List[int]) -> int:
-        
-        memory = [3**38] * len(nums)
-        
-        memory[-1] = 0
-        
-        i = len(nums)-2
-        
-        while i >= 0:
-            
-            min1 = 3**38
-            for step in range(1,nums[i]+1):
-                if i + step < len(memory):
-                    min1 = min(min1,memory[i+step])
-                
-            memory[i] = min1 + 1
-            
-            i -= 1
-        
-        # print(memory)
-        
-        return memory[0]
+
+    def jump(self, nums):
+
+        farthest = 0  # keep track of farthest we can reach
+        jumpTill = 0  # Used to process one chunk at a time
+        jumps = 0
+
+        for i in range(len(nums) - 1):
+
+            farthest = max(farthest, i + nums[i])
+
+            if i == jumpTill:
+                jumpTill = farthest
+                jumps += 1
+
+        return jumps
+
+
+
+
