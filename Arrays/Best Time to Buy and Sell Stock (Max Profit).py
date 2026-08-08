@@ -1,6 +1,6 @@
 
 class Solution:
-    def maxProfit(self, prices: List[int]) -> int:
+    def maxProfit(self, prices):
         
         min1 = 3**38
         max1 = 0
