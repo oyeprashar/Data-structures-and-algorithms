@@ -3,13 +3,12 @@ class Solution:
         
         arr1.sort()
         arr2.sort()
-        
-        # nlogn + mlogm
+
         
         i = len(arr1)-1
         j = 0
         
-        # n+m
+        # The largest of arr1 should be smaller than the smallest of arr! Swap while they aint
         while i >=0 and j < len(arr2) and arr1[i] > arr2[j]:
             
             arr1[i],arr2[j] = arr2[j],arr1[i]
