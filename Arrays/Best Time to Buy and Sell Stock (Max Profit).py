@@ -13,6 +13,3 @@ class Solution:
                 max1 = max(max1,prices[i]-min1)
         
         return max1
-            
-        
-            
