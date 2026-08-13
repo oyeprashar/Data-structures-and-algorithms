@@ -6,6 +6,22 @@ Output: 6
 
 Explanation: The above elevation map (black section) is represented by array [0,1,0,2,1,0,1,3,2,1,2,1].
 In this case, 6 units of rain water (blue section) are being trapped.
+
+
+Approach :
+
+    Iterating the complete array
+        - We need to iterate over all the towers and compute how much water can be trapper above them. Which we keep adding
+            to res
+        - We compute the water level and if the height of current tower is smaller than the water level, water is trapped!
+
+    How do we compute the water level at each index?
+
+        - The very core of the logic is that water is trapped between two towers and their height is limited by the
+            height of the smaller of these two
+        - So at each index we need to understand what towers are causing the trapped water at the current index
+        - Since we want to maximise the amount of trapped water, these two towers should be the best possible (max)
+        - To understand the leftmax and rightmax we use the below helper method. The water level is min of these two
 """
 
 
