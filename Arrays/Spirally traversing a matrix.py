@@ -11,28 +11,32 @@ class Solution:
         ans = []
         
         while top <= down and left <= right:
-            
+
+            # process top
             if dir == 1:
                 # row = top,
                 # col = left --> right
                 for col in range(left,right+1):
                     ans.append(matrix[top][col])
                 top += 1
-            
+
+            # process right
             if dir == 1:
                 # row = top--> down
                 # col = right
                 for row in range(top,down+1):
                     ans.append(matrix[row][right])
                 right -= 1
-            
+
+            # process bottom
             if dir == 2:
                 # row = down
                 # col if decrements from right to left
                 for col in range(right,left-1,-1):
                     ans.append(matrix[down][col])
                 down -= 1
-            
+
+            # process left
             if dir == 3:
                 # row = down -- > top
                 # col = left
