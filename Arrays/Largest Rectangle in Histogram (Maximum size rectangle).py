@@ -9,6 +9,14 @@ class Solution:
     """
     def getLeftLimit(self, heights):
 
+        """
+        The logic is pretty simple :
+            - Remove the indices of towers from the sack which are bigger than my current tower as i can include them
+            - If the stack gets empty, that means there is no left limit and I can include everything in the left (0)
+            - If we find some boundary, then we can include everything boundary + 1
+            - All the indices are added to the stack of process them all
+        """
+
         leftArr = [0] * len(heights)
         stack = []
 
@@ -31,7 +39,12 @@ class Solution:
             stack.append(i)
         return leftArr
 
+
     def getRightLimit(self, heights):
+
+        """
+        The logic for this is same as the getLeftLimit, but we process from left to right
+        """
 
         rightArr = [0] * len(heights)
         stack = []
