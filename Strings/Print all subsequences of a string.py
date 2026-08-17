@@ -3,9 +3,9 @@ What is the difference between permutations and generating subsequences?
 
     Subsequence = choose characters, preserve order.
     Permutation = rearrange characters.
+
+Time complexity : O(2^n) since at each index we have two option/branching
 """
-
-
 
 
 class Solution:
