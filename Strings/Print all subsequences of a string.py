@@ -1,3 +1,13 @@
+"""
+What is the difference between permutations and generating subsequences?
+
+    Subsequence = choose characters, preserve order.
+    Permutation = rearrange characters.
+"""
+
+
+
+
 class Solution:
 
     def generate_subsets(self, currIndex, currArr, stringArr, res):
