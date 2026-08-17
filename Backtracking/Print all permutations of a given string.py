@@ -1,32 +1,34 @@
 """
-generate all the permutation of the input string
-it means all the characters in the strings should be swapped with all the other characters and with iteself too!
-current se swap ka matlab h wahi same string ek permutation bhi h
+The time complexity is O(n!)
+
+    - Because even if we naively think mathematically, that's how permutations are genrated
+    - We make n calls at n indices but that keep on decreasing at each level
+
+        index 0 → n choices
+        index 1 → n-1 choices
+        index 2 → n-2 choices
+        ...
+        index n-1 → 1 choice
+
+        That's total of n! choices
+
 """
 
-def permutate(l,r,strArr,ans):
+class Solution:
 
-    if l == r: # if l is at the last index it means that all permutations are already generated and no more elements are ahead.
-        curr = "".join(strArr)
-        ans.append(curr)
-        return
+    def generatePermutations(self, currIndex, stringList, res):
 
-    for i in range(l,r+1):
-        # swap elements at i and r
-        strArr[l],strArr[i] = strArr[i],strArr[l]
-        permutate(l+1,r,strArr,ans)
-        # unswap for other permutations
-        strArr[l],strArr[i] = strArr[i],strArr[l]
+        if currIndex == len(stringList):
+            res.append("".join(stringList))
+            return
 
-def getPermutations(string):
-    strArr = list(string)
-    l = 0
-    r = len(string)-1
-    ans = []
+        for i in range(currIndex, len(stringList)):
+            stringList[currIndex], stringList[i] = stringList[i], stringList[currIndex]
+            self.generatePermutations(currIndex + 1, stringList, res)
+            stringList[currIndex], stringList[i] = stringList[i], stringList[currIndex]
 
-    permutate(l,r,strArr,ans)
-    return ans
+    def findPermutation(self, string):
 
-string = "ABC"
-print(getPermutations(string))
-
+        res = []
+        self.generatePermutations(0, list(string), res)
+        return list(set(res))
