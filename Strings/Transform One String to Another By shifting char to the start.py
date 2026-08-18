@@ -9,10 +9,14 @@ def minOperations(str1,str2):
         if str1[i] == str2[j]:
             i -= 1
             j -= 1
-        
+
         else:
+
+            """
+            We count from the end because it preserves the order the question wants. We move the ith pointer in the
+            string1 and keep on counting the mismatches
+            """
             while i >= 0 and str1[i] != str2[j]:
-                # we find the desired char kitne piche hai that would be the number of char we would need to shift at the start of the str1
                 i -= 1
                 count += 1
     
