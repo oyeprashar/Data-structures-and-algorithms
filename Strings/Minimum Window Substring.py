@@ -49,7 +49,7 @@ class Solution:
                 currDict[char] -= 1
 
                 # it is okay to have more frequency in the currDict but not less!
-                if char in targetDict and currDict[char] < targetDict[char]:
+                if char in targetDict and currDict[char] < targetDict[char]: # Important
                     currCount -= 1
 
 
