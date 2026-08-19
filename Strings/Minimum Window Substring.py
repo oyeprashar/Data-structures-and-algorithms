@@ -1,68 +1,59 @@
+
 class Solution:
 
-    def minWindow(self, s: str, t: str) -> str:
-        
-        
-        t_dict ={}
-        for char in t:
-            if char not in t_dict:
-                t_dict[char] = 1
+    def minWindow(self, string1, targetString):
+
+        targetDict = {}
+        for char in targetString:
+            if char not in targetDict:
+                targetDict[char] = 1
             else:
-                t_dict[char] += 1
-            
-        reqCount = len(t_dict)
-        
-        s_dict = {}
+                targetDict[char] += 1
+
+        # this is not what it looks like ;)
+        targetCount = len(targetDict)
         currCount = 0
-        start = 0
-        end = 0
-        
-        ans = [3**38,-1,-1]
-        
-        
-        while True:
-            
-            if currCount < reqCount and end == len(s):
-                break
-            
-            if currCount < reqCount:
-                char = s[end]
-                
-                if char not in s_dict:
-                    
-                    s_dict[char] = 1
+        currDict = {}
+        i = j = 0
+
+        smallestStart = None
+        smallestEnd = None
+
+        # We will add a condition here
+        while not(j == len(string1) and currCount < targetCount):
+
+
+            # expand using j
+            if currCount < targetCount:
+                newChar = string1[j]
+                j += 1
+
+                if newChar in currDict:
+                    currDict[newChar] += 1
                 else:
-                    s_dict[char] += 1
-            
-                if char in t_dict and t_dict[char] == s_dict[char]:
+                    currDict[newChar] = 1
+
+                if newChar in targetDict and currDict[newChar] == targetDict[newChar]:
                     currCount += 1
-                    
-                end += 1
-                
-            elif currCount == reqCount:
-                
-                currLen = ((end-1)-start)+1
-                
-                if currLen < ans[0]:
-                    ans[0] = currLen
-                    ans[1] = start
-                    ans[2] = end
-                
-                char = s[start]
-                
-                s_dict[char] -= 1
-                
-                if char in t_dict and s_dict[char] < t_dict[char]:
+
+            else:
+                if smallestStart is None or (j - i) < (smallestEnd - smallestStart):
+                    smallestStart = i
+                    smallestEnd = j
+
+
+                # we skrink using ith pointer
+                char = string1[i]
+                i += 1
+
+                currDict[char] -= 1
+
+                # it is okay to have more frequency in the currDict but not less!
+                if char in targetDict and currDict[char] < targetDict[char]:
                     currCount -= 1
-                
-                start += 1
-            
-        i = ans[1]
-        j = ans[2]
-        currStr = s[i:j]
-        
-        if i == -1 and j == -1:
+
+
+        if smallestStart is None or smallestEnd is None:
             return ""
-        
-        return currStr
-                
+
+        return string1[smallestStart:smallestEnd]
