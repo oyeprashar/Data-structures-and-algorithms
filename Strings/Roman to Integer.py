@@ -1,3 +1,15 @@
+"""
+The logic to convert roman to int is simple :
+    - We iterate from the right to left (from the end)
+    - prev and total are initialised with 0
+    - If currValue is less than the prev, we subtract from the total
+    - If currValue is greater than the prev, we add it to the total
+    - prev is always updated with the curr value
+"""
+
+
+
+
 class Solution:
     
     def romanToInt(self, s: str) -> int:
