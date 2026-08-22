@@ -1,32 +1,43 @@
 import math
 
-def countRev(s):
-    
+def countMinReversals(s):
+
+
+    # step 1 : Find out the total number of brackets causing the string to be imbalanced
+
     stack = []
-    
+
     for bracket in s:
-        
-        if bracket == "{":
+        if bracket ==  "{":
             stack.append(bracket)
-        
+
         elif bracket == "}":
-            
-            if len(stack) == 0 or stack[-1] != "{":
-                stack.append(bracket)
-            
-            elif stack[-1] == "{":
+
+            if len(stack) > 0 and stack[-1] == "{":
                 stack.pop()
-            
-                
+
+            else:
+                stack.append(bracket)
+
+    # this will contain all the brackets that are causing the string to imblanced
+    # print(stack)
+
+    # already balanced
     if len(stack) == 0:
         return 0
-    
+
     if len(stack) % 2 == 1:
         return -1
-            
-    opening = stack.count("{")
-    closing = len(stack) - opening
-    
-    ans = math.ceil(opening/2) + math.ceil(closing/2)
-    
-    return ans
+
+    numberOfOpeningBrackets = stack.count('{')
+    numberOfClosingBrackets = stack.count('}')
+
+    """
+    Intuition : 
+        The main point to remember is that we are reversing brackets so for {{ we need to reverse just one of them 
+        so number of unbalanced opening divided by 2. Same for the closing brackets.
+    """
+
+    return math.ceil(numberOfOpeningBrackets / 2) + math.ceil(numberOfClosingBrackets / 2)
+
+print(countMinReversals("{{}{{{}{{}}{{"))
