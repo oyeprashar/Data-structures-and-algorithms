@@ -10,22 +10,32 @@ Suppose there is an array from 1 to N, given a subset we need to find the missin
 """
 
 class Solution:
-    def findTwoElement( self,arr, n):
-        dict1 = {}
+    def findTwoElement(self, arr):
+
+        """
+        Duplicate element is the one where the index is already marked, and we find the element again
+        Missing element is the one where the index is not marked at all
+
+        """
+
+        missingElements = []
+        duplicateElements = []
+
+        # logic to find out the duplicate elements
         for num in arr:
-            if num not in dict1:
-                dict1[num] = 1
+            num = abs(num)
+            if arr[num - 1] < 0:
+                duplicateElements.append(num)
             else:
-                dict1[num] += 1
-        # output = repeating number, missing number
-        repeated = []
-        missing = []
-        for num in range(1,n+1):
-            
-            if num in dict1 and dict1[num] > 1:
-                repeated.append(num)
-            
-            elif num not in dict1:
-                missing.append(num)
-        repeated.extend(missing)
-        return repeated
+                arr[num - 1] *= -1
+
+
+        for num in range(1, len(arr) + 1):
+
+            if arr[num -1] > 0:
+                missingElements.append(num)
+
+        res = []
+        res.extend(duplicateElements)
+        res.extend(missingElements)
+        return res
