@@ -16,31 +16,31 @@ class Solution:
         arr.sort()
         count = 0
 
-        for i in range(len(arr)-2):
-
+        for i in range(len(arr) - 1):
             j = i + 1
             k = len(arr) - 1
 
             while j < k:
 
-                if arr[i] + arr[j] + arr[k] < targetSum:
+                """
+                If arr[i] + arr[j] + arr[k] < targetSum, then since the array is sorted,
+                for the fixed pair (i, j), every element from index j + 1 through k
+                can be chosen as the third element.
 
-                    """
-                    when we find arr[i] + arr[j] + arr[k] < k and array is sorted that means elements from i + 1 till k
-                    can pair up with i and j to form the triplets having sum less than target
-                    
-                    so i, j can pair with (k-j) elements and we add that count to answer
-                    """
+                There are (k - j) such choices, so we add that many triplets.
+                """
+
+                currSum = arr[i] + arr[j] + arr[k]
+
+                if currSum < targetSum:
                     count += (k - j)
-
-                    # This is because we already counted elements (k-j) with i, j and if we decrement k, it won't be useful
-                    # So We increment j to find new combinations with j
                     j += 1
 
                 else:
                     k -= 1
 
         return count
+
 
 s = Solution()
 print(s.countTriplets(2, [-2, 0, 1, 3]))
