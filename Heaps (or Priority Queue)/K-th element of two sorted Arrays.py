@@ -1,22 +1,33 @@
-
-import heapq
 class Solution:
-    def kthElement(self,  arr1, arr2, n, m, k):
-        
-        # O(logN)
-        heapq.heapify(arr1)
-        
-        # O(logM)
-        for num in arr2:
-            heapq.heappush(arr1,num)
-            
-        if k > len(arr1) or len(arr1) == 0:
-            return -1
-        nk = 0
-        
-        # isski complexity is negligible
-        while nk != k:
-            
-            top = heapq.heappop(arr1)
-            nk += 1
-        return top
+    def kthElement(self, arr1, arr2, k):
+
+        i = j = 0
+        count = 0
+
+        while i < len(arr1) and j < len(arr2):
+
+            count += 1
+            current = None
+
+            if arr1[i] < arr2[j]:
+                current = arr1[i]
+                i += 1
+
+            else:
+                current = arr2[j]
+                j += 1
+
+            if count == k:
+                return current
+
+        while i < len(arr1):
+            count += 1
+            if count == k:
+                return arr1[i]
+            i += 1
+
+        while j < len(arr2):
+            count += 1
+            if count == k:
+                return arr2[j]
+            j += 1
