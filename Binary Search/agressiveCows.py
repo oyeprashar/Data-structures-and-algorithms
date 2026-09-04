@@ -1,5 +1,10 @@
 """
 In this question we have to maximise the min valid distance
+
+
+This is binary search over the answer. We have a range of valid answers i.e. 0 till max distance and for a valid answer
+we try to maximise it using binary search
+
 """
 
 class Solution:
@@ -38,11 +43,12 @@ class Solution:
                 return self.binarySearchOnAnswer(left, mid - 1, stalls, numOfCows, res)
 
 
+    # O(nlogn + nlogD) = O( n (logn + logD))
     def placeCows(self, stalls, numOfCows):
-        stalls.sort()
+        stalls.sort() # O(nlogn)
         res = [-3**38]
         maximumDist = stalls[-1] - stalls[0]
-        self.binarySearchOnAnswer(0, maximumDist, stalls, numOfCows, res)
+        self.binarySearchOnAnswer(0, maximumDist, stalls, numOfCows, res) # (nlogD)
         return res[0]
 
 test_cases = int(input())
