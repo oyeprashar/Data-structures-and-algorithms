@@ -1,86 +1,87 @@
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+
 class Solution:
-    
-    def addTwoLists(self, first, second):
-        
-        # step1 : reverse both the linkedlists
+
+    def removeLeadingZeroes(self, head):
+
+        if head is not None and head.next is None and head.data == 0:
+            return head
+
+        while head is not None:
+
+            if head.data == 0:
+                head = head.next
+            else:
+                return head
+
+        return None
+
+    def reverse(self, head):
+
         prev = None
-        curr = first
-        head1 = None
-        
-        while curr != None:
+        curr = head
+
+        while curr is not None:
             nextNode = curr.next
             curr.next = prev
             prev = curr
             curr = nextNode
-        
-        head1 = prev
-        
-        prev = None
-        curr = second
-        head2 = None
-        
-        while curr != None:
-            nextNode = curr.next
-            curr.next = prev
-            prev = curr
-            curr = nextNode
-            
-        head2 = prev
-        
-        curr1 = head1
-        curr2 = head2
-        left = 0
-        prev = None
-        finalHead = None
-        
-        while curr1 != None or curr2 != None:
-            
-            if curr1 == None:
-                num1 = 0
-            else:
-                num1 = curr1.data
-            
-            if curr2 == None:
-                num2 = 0
-            else:
-                num2 = curr2.data
-            
-            currSum = num1 + num2 + left
-            
-            if currSum % 10 == currSum:
-                left = 0 
-                newData = currSum
-            else:
-                newData = currSum % 10
-                left = int((currSum/10)%10)
-            
-            newNode = Node(newData)
-            if prev == None:
-                finalHead = newNode
-                prev = newNode
-            else:
-                prev.next = newNode
-                prev = newNode
-            
-            if curr1 != None:
-                curr1 = curr1.next
-            if curr2 != None:
-                curr2 = curr2.next
-            
-        # print("left =",left)
-        # Reverse this LinkedList
-        
-        if left == 1:
-            prev.next = Node(1)
-        
-        prev = None
-        curr = finalHead
-        
-        while curr != None:
-            nextNode = curr.next
-            curr.next = prev
-            prev = curr
-            curr = nextNode
-        
+
         return prev
-                
+
+    def addTwoLists(self, head1, head2):
+        reversedHead1 = self.reverse(head1)
+        reversedHead2 = self.reverse(head2)
+
+        curr1, curr2 = reversedHead1, reversedHead2
+        carry = 0
+
+        """
+        345
+         21
+        """
+        newHead = None
+        lastNode = None
+
+        while curr1 is not None or curr2 is not None:
+
+            num1 = 0
+            num2 = 0
+
+            if curr1 is not None:
+                num1 = curr1.data
+                curr1 = curr1.next
+
+            if curr2 is not None:
+                num2 = curr2.data
+                curr2 = curr2.next
+
+            total = num1 + num2 + carry
+
+            if total <= 9:
+                currData = total
+                carry = 0
+                pass
+            else:
+                currData = total % 10
+                carry = total // 10
+
+            newNode = Node(currData)
+
+            if newHead is None:
+                newHead = newNode
+            else:
+                lastNode.next = newNode
+
+            lastNode = newNode
+
+        if carry > 0:
+            lastNode.next = Node(carry)
+            lastNode = lastNode.next
+
+        newHead = self.reverse(newHead)
+        return self.removeLeadingZeroes(newHead)
