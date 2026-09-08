@@ -1,60 +1,44 @@
-def intersetPoint(head1,head2):
-    # step1 : count the len of head1 and head2
-    
-    curr1 = head1
-    curr2 = head2
-    count1 = 0
-    count2 = 0
-    
-    while curr1 != None:
-        count1 += 1
-        curr1 = curr1.next
-    
-    while curr2 != None:
-        count2 += 1
-        curr2 = curr2.next
-        
-    if count1 == count2:
-        curr1 = head1
-        curr2 = head2
-        
-        while curr1 != None and curr2 != None:
-            if curr1 == curr2:
-                return curr1.data
-            curr1 = curr1.next
-            curr2 = curr2.next
-        
-    elif  count2 < count1:
-        target = abs(count1-count2)
-        currCount = 0
-        while head1 != None and currCount != target:
-            currCount += 1
+class Solution:
+
+    def moveHead(self, head, targetCount):
+
+        if targetCount == 0:
+            return head
+
+        count = 0
+        while head is not None and count != targetCount:
+            count += 1
+            head = head.next
+
+        return head
+
+    def getLength(self, head):
+
+        count = 0
+        curr = head
+
+        while curr is not None:
+            count += 1
+            curr = curr.next
+
+        return count
+
+    def intersectPoint(self, head1, head2):
+
+        length1 = self.getLength(head1)
+        length2 = self.getLength(head2)
+
+        diff = abs(length1 - length2)
+
+        # we need to move the head of the longer linkedList
+
+        if length1 > length2:
+            head1 = self.moveHead(head1, diff)
+        else:
+            head2 = self.moveHead(head2, diff)
+
+        while head1.next != head2.next:
             head1 = head1.next
-        
+            head2 - head2.next
 
-        curr1 = head1
-        curr2 = head2
-        
-        while curr1 != None and curr2 != None:
-            if curr1 == curr2:
-                return curr1.data
-            curr1 = curr1.next
-            curr2 = curr2.next
-    
-    elif count1 < count2:
-        target = abs(count1-count2) 
-        currCount = 0
-        while head2 != None and currCount != target:
-            currCount += 1
-            head2 = head2.next
-        
-
-        curr1 = head1
-        curr2 = head2
-        
-        while curr1 != None and curr2 != None:
-            if curr1 == curr2:
-                return curr1.data
-            curr1 = curr1.next
-            curr2 = curr2.next
-        
+        return head1.next
