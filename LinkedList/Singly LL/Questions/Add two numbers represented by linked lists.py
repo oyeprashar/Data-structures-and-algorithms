@@ -60,7 +60,7 @@ class Solution:
                 num2 = curr2.data
                 curr2 = curr2.next
 
-            total = num1 + num2 + carry
+            total = num1 + num2 + carry # even tho either of the num can be None but there still be some carry
 
             if total <= 9:
                 currData = total
