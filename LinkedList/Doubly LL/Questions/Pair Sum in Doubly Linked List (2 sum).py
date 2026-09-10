@@ -1,33 +1,45 @@
+
+
+class Node:
+    def __init__(self, val):
+        self.data = val
+        self.next = None
+        self.prev = None
+
+
 class Solution:
 
     def getLastNode(self, head):
+
         curr = head
         while curr.next is not None:
             curr = curr.next
+
         return curr
 
-    def findPairsWithGivenSum(self, target, head):
 
+    def givenSumPairs(self, head, target):
+
+        leftNode = head
+        rightNode = self.getLastNode(head)
         res = []
-        lastNode = self.getLastNode(head)
-        curr = head
 
-        while curr != lastNode:
+        while leftNode != rightNode:
 
-            if curr.data + lastNode.data == target:
-                res.append([curr.data, lastNode.data])
+            currSum = leftNode.data + rightNode.data
 
-                # because if we move the pointers, they will cross each other (left > right)
-                if curr.next == lastNode:
-                    return res
+            if currSum == target:
+                res.append([leftNode.data. rightNode.data])
+                leftNode = leftNode.next
+                rightNode = rightNode.prev
 
-                curr = curr.next
-                lastNode = lastNode.prev
-
-            elif curr.data + lastNode.data < target:
-                curr = curr.next
+            elif currSum < target:
+                leftNode = leftNode.next
 
             else:
-                lastNode = lastNode.prev
+                rightNode = rightNode.prev
 
         return res
+
+
+
