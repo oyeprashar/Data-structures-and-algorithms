@@ -1,43 +1,58 @@
-'''
 class Node:
-    def __init__(self, d):
-        self.data=d
-        self.next=None
-        self.bottom=None
-
-
-'''
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+        self.bottom = None
 
 
 class Solution:
 
-    def merge(self,  root1, root2):
+    def merge(self, head1, head2):
+        curr1 = head1
+        curr2 = head2
 
-        # if we are done with one list, the bottom is everything of another list
-        if root1 is None:
-            return root2
+        newHead = None
+        lastNode = None
 
-        if root2 is None:
-            return root1
+        while curr1 is not None and curr2 is not None:
 
-        currNode = None
+            currData = None
 
-        if root1.data < root2.data:
-            currNode = root1
-            currNode.bottom = self.merge(root1.bottom, root2)
-        else:
-            currNode = root2
-            currNode.bottom = self.merge(root1, root2.bottom)
+            if curr1.data < curr2.data:
+                currData = curr1.data
+                curr1 = curr1.bottom
+            else:
+                currData = curr2.data
+                curr2 = curr2.bottom
 
-        currNode.next = None
-        return currNode
+            newNode = Node(currData)
 
-    # O(n*k)
-    def flatten(self, root):
+            if newHead is None:
+                newHead = newNode
+            else:
+                lastNode.bottom = newNode
 
-        if root is None or root.next is None:
-            return root
+            lastNode = newNode
 
-        root.next = self.flatten(root.next)
-        root = self.merge(root, root.next)
-        return root
+        while curr1 is not None:
+            lastNode.bottom = Node(curr1.data)
+            lastNode = lastNode.bottom
+            curr1 = curr1.bottom
+
+        while curr2 is not None:
+            lastNode.bottom = Node(curr2.data)
+            lastNode = lastNode.bottom
+            curr2 = curr2.bottom
+
+        return newHead
+
+
+    def flatten(self, head):
+
+        # we cannot process the last column linkedlist
+        if head is None or head.next is None:
+            return head
+
+        # second last and last is merged and we come back to left side
+        head.next = self.flatten(head.next)
+        return self.merge(head, head.next)
