@@ -29,7 +29,8 @@ class Solution:
                 freq[char] += 1
 
             queue.append(char)
-          
+
+            # we remove the start of the queue because we want to figure out the "first" occurrence
             while len(queue) > 0 and freq[queue[0]] > 1:
                 queue.pop(0)
               
