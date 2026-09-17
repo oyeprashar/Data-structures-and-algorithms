@@ -1,51 +1,29 @@
+"""
+The left view is literally the left side of the binary tree. The first node on each level when we traverse down the tree
+in (left, right) motion
 
-# APPROACH ONE USING LEVEL ORDER TRAVERSAL (TOO MUCH SPACE TAKEN)
-# Time Complexity = O(N) | Space Complexity = O(N)
+"""
 
-def LeftView(root):
-    
-    if root == None:
-        return []
-    
-    queue = [root]
-    ans = []
-    
-    while len(queue) != 0:
-        
-        ans.append(queue[0].data)
-        sizeQ = len(queue)
-        
-        for _ in range(sizeQ):
-            
-            curr = queue.pop(0)
-            
-            if curr.left != None:
-                queue.append(curr.left)
-            
-            if curr.right != None:
-                queue.append(curr.right)
-            
-        
-    return ans
 
-# EFFICIENT APPROACH RECURSION
-# Time Complexity = O(N) | Space Complexity = O(H)
+class Solution:
 
-def getLeftView(root,currLevel,lastLevel,ans):
-    
-    if root == None:
-        return
+    def getLeftView(self, root, currLevel, lastLevel, res):
 
-    if currLevel > lastLevel[0]:
-        ans.append(root.data)
-        lastLevel[0] = currLevel
-        
-    getLeftView(root.left,currLevel+1,lastLevel,ans)
-    getLeftView(root.right,currLevel+1,lastLevel,ans)
+        if root is None:
+            return
 
-def LeftView(root):
-    
-    ans = []
-    lastLevel = [-1]
-    getLeftView(root,1,lastLevel,ans)
-    return ans
+        if currLevel > lastLevel[0]:
+            res.append(root.data)
+            lastLevel[0] = currLevel
+
+        self.getLeftView(root.left, currLevel + 1, lastLevel, res)
+        self.getLeftView(root.right, currLevel + 1, lastLevel, res)
+
+
+
+    def leftView(self, root):
+
+        lastLevel = [-1]
+        res = []
+        self.getLeftView(root, 0, lastLevel, res)
+        return res
