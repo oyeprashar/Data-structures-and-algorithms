@@ -1,64 +1,86 @@
+"""
+    For every recursive call, we remove the outer boundary brackets
+    so that currIndex is sitting at some int and not a bracket
 
-from typing import get_args
+    Example:
+        4(2(3)(1))(6(5))
+
+    Left subtree:
+        (2(3)(1)) -> 2(3)(1)
+
+    Right subtree:
+        (6(5))    -> 6(5)
+
+    Since currIndex is sitting at some int, the last bracket is not balancing anything and we exclude it as well
+"""
 
 
 class Node:
-    def __init__(self,data):
+    def __init__(self, data):
         self.data = data
-        self.left = None 
+        self.left = None
         self.right = None
 
-def preorder(root):
 
-    if root:
-        print(root.data,end = " ")
-        preorder(root.left)
-        preorder(root.right)
+class Solution:
 
 
-def findEnd(i,j,str1):
+    def getClosingBracketIndex(self, start, end, string):
 
-    stack = []
+        if start > end:
+            return -1
 
-    for x in range(i,j+1):
+        count = 0
 
-        if str1[x] == '(':
-            stack.append(str1[x])
-        
-        elif str1[x] == ')':
-            stack.pop()
+        for i in range(start, end + 1):
 
-            if len(stack) == 0:
-                return x 
-            
+            if string[i] == '(':
+                count += 1
 
-def generateTree(i,j,str1):
+            elif string[i] == ')':
+                count -= 1
 
-    if str1[i] == '(' or str1[i] == ')':
-        return generateTree(i+1,j,str1)
-    
-    currNode = Node(int(str1[i]))
+            if count == 0:
+                return i
 
-    if i + 1 < len(str1) and str1[i+1] == '(':
-        startLeft = i + 1
-        endLeft = findEnd(i+1,j,str1)
-
-        currNode.left = generateTree(startLeft,endLeft,str1)
-
-        if endLeft + 1 and str1[endLeft + 1] == '(':
-            startRight = endLeft + 1
-            endRight = findEnd(startRight,j,str1)
-
-            currNode.right = generateTree(startRight,endRight,str1)
-        
-    return currNode
-
-str1 = "4(2(3)(1))(6(5))"
-root = generateTree(0,len(str1)-1,str1)
-
-preorder(root)
-
- 
+        return -1
 
 
+    def generateTree(self, left, right, string):
 
+        if left > right:
+            return None
+
+        # we need to handle the case where the num is more than 1 digit
+        value = 0
+
+        while left <= right and string[left].isdigit():
+            value *= 10 # to place the current int at the right digit
+            value += int(string[left])
+            left += 1
+
+        # now left is sitting on a non-int value i.e. a bracket
+
+        root = Node(value)
+
+        # Now we have to figure out if there is a left and right
+        # subtree connected to this root node or not
+
+        endIndex = -1
+
+        if left <= right and string[left] == '(':
+            endIndex = self.getClosingBracketIndex(left, right, string)
+
+        # if subtree were found
+        if endIndex != -1:
+
+            # left is at a bracket and endIndex is at a bracket
+            # the exclusion logic is explained at the start of the file
+            root.left = self.generateTree(left + 1, endIndex - 1, string)
+            root.right = self.generateTree(endIndex + 2, right - 1, string)
+
+        return root
+
+
+    def treeFromString(self, s):
+        return self.generateTree(0, len(s) - 1, s)
