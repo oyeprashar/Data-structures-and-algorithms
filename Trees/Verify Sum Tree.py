@@ -1,33 +1,28 @@
-"""
-In sum tree following properties are obeyed
-    1. Root.data = leftRes + rightRes
-    2. subtree returns : leftRes + root.data + rightRes to its parent
-
-We need to do this while keeping track that the property is obeyed at each node
-"""
 
 class Solution:
 
-
-    def checkSumTree(self, root, ans):
+    def checkSumTree(self, root, currLevel, lastLeafLevel, res):
 
         if root is None:
-            return 0
+            return
 
-        if root.left is None and root.right == None:
-            return root.data
+        if root.left is None and root.right is None:
 
-        leftRes = self.checkSumTree(root.left, ans)
-        rightRes = self.checkSumTree(root.right, ans)
+            if lastLeafLevel[0] == -1:
+                lastLeafLevel[0] = currLevel
 
-        if root.data != leftRes + rightRes:
-            ans[0] = False
-
-        return leftRes + root.data + rightRes
+            elif currLevel != lastLeafLevel[0]:
+                res[0] = False
 
 
-    def is_sum_tree(self, node):
+        self.checkSumTree(root.left, currLevel + 1, lastLeafLevel, res)
+        self.checkSumTree(root.right, currLevel + 1, lastLeafLevel, res)
 
-        ans = [True]
-        self.checkSumTree(root, ans)
-        return ans[0]
+    def check(self, root):
+
+
+        res = [True]
+        lastLeafLevel = [-1]
+        self.checkSumTree(root, 0, lastLeafLevel, res)
+        return res[0]
+
