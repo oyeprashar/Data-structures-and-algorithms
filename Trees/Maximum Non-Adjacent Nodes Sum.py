@@ -1,7 +1,7 @@
 """
 Time complexity :
     - Without memoisation : O(2^n) because there are two options at every node (select node or dont select it)
-    - With memoisation : O(n)
+    - With memoisation : O(n) since the cache is linear and we are not doing extra work at each call
 """
 class Solution:
 
