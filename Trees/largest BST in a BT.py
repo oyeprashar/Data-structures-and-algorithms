@@ -6,48 +6,38 @@ returned to the leaf node and we check `root.data > leftMaxValue and root.data <
 
 """
 
-class Node:
-    def __init__(self, val):
-        self.data = val
-        self.left = None
-        self.right = None
-
 INT_MAX = 3**38
 INT_MIN = -3**38
 
 class Solution:
 
-    def largestBSTHelper(self, root, minValue, maxValue):
+    def getLargestBSTSize(self, root, minValue, maxValue):
 
         if root is None:
-            return True, 0, INT_MAX, INT_MIN # because the min and max is used to validate the leaf nodes
+            return True, INT_MAX, INT_MIN, 0 # because we compare the root's data with max of left and min of right and this makes it pass if its leaf
 
-        isLeftBST, leftSize, leftMinValue, leftMaxValue = self.largestBSTHelper(root.left, minValue, maxValue)
-        isRightBST, rightSize, rightMinValue, rightMaxValue = self.largestBSTHelper(root.right, minValue, maxValue)
 
-        if isLeftBST is True and isRightBST is True and root.data > leftMaxValue and root.data < rightMinValue:
+        isLeftBst, leftMin, leftMax, leftSize = self.getLargestBSTSize(root.left, minValue, maxValue)
+        isRightBst, rightMin, rightMax, rightSize = self.getLargestBSTSize(root.right, minValue, maxValue)
 
-            if leftMinValue == INT_MAX:
-                leftMinValue = root.data
+        # process the node
+        if isLeftBst and isRightBst and root.data > leftMax and root.data < rightMin:
 
-            if rightMaxValue == INT_MIN:
-                rightMaxValue = root.data
 
-            return True, leftSize + 1 + rightSize, leftMinValue, rightMaxValue
+            # for a leaf node
+            if leftMin == INT_MAX:
+                leftMin = root.data
+
+            if rightMax == INT_MIN:
+                rightMax = root.data
+
+            return True, leftMin, rightMax, leftSize + 1 + rightSize
 
         else:
-            return False, max(leftSize, rightSize), -1, -1
+            return False, -1, -1, max(leftSize, rightSize)
 
     def largestBst(self, root):
-        _, maxBSTSize, _, _ = self.largestBSTHelper(root, minValue=INT_MAX, maxValue=INT_MIN)
-        return maxBSTSize
 
-# Test code
-root = Node(6)
-root.left = Node(7)
-root.left.right = Node(2)
-root.right = Node(3)
-root.right.left = Node(2)
-root.right.right = Node(4)
-s = Solution()
-print(s.largestBst(root))
+
+        _, _, _, size = self.getLargestBSTSize(root, INT_MAX, INT_MIN)
+        return size
