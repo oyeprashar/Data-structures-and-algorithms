@@ -1,30 +1,33 @@
-class Solution:    
-   
-    def minimumPlatform(self,n,arr,dep):
-        
-        if len(arr) == 1:
-            return 1
-        
-        arr.sort()
-        dep.sort()
-        
-        currRequired = 1
-        maxRequired = 1
-        
+"""
+We need to find the minimum number of platforms that can accommodate all the trains during the peak hour.
+"""
+
+class Solution:
+
+    def minPlatform(self, arrival, departure):
+        arrival.sort()
+        departure.sort()
+
+        peakTimePlatforms = 1
+        currPlatforms = 1
+
         i = 1
         j = 0
-        
-        while i < len(arr) and j < len(arr):
-            
-            # if new train has come and old train is still at the platform, we need one more platform
-            if arr[i] <= dep[j]:
-                i += 1
-                currRequired += 1
-                maxRequired = max(maxRequired,currRequired)
-            
+
+        while i < len(arrival) and j < len(departure):
+
+            # add a platform and let the train arrive
+            if arrival[i] <= departure[j]:
+                currPlatforms += 1
+                i += 1  #
+
+            # Trains departs and the platform is no longer needed
             else:
-                # else we need to depart the old train and free the platform
+                currPlatforms -= 1
                 j += 1
-                currRequired -= 1
-            
-        return maxRequired
+
+            # keep track of how many platforms were used during the peak/busiest hour
+            peakTimePlatforms = max(peakTimePlatforms, currPlatforms)
+
+        return peakTimePlatforms
+
