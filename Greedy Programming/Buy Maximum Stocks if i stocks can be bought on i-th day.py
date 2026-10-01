@@ -8,37 +8,36 @@ For example, for 3 days the price of a stock is given as [7, 10, 4]
 You can buy 1 stock worth 7 rs on day 1, 2 stocks worth 10 rs each on day 2
 and 3 stock worth 4 rs each on day 3.
 """
-#price = [ 10, 7, 19 ] k = 45
 
-def maxCount(input_arr,capacity):
+class Solution:
+    def buyMaximumProducts(self, budget, prices):
 
-    arr = []
-    for index,value in enumerate(input_arr):
-        
-        arr.append([value,index+1])
-    
-    arr.sort()
+        stocks = []
 
-    count = 0
+        for index, value in enumerate(prices):
+            stocks.append([value, index + 1])
 
-    for stock in arr:
-        
-        if stock[0]*stock[1] <= capacity: # stock * day
-            
-            capacity -= stock[0]*stock[1]
-            count += stock[1]
-            print("taking ==",stock[0]*stock[1],"capacity ==",capacity,"count ==",count)
-        
-        else:
-            canBuy = min(capacity // stock[0], stock[1])
-            count += canBuy 
-            capacity -= (canBuy * stock[1])
-            print("taking ==",canBuy * stock[1],"capacity ==",capacity,"count ==",count)
-        
-    return count
+        stocks.sort() # smallest first because we want to maximise the count and buy alot
+        stocksBought = 0
 
-arr = [ 10, 7, 19 ]
-print(maxCount(arr,45))
+        for stock in stocks:
+
+            value = stock[0]
+            quantity = stock[1]
+
+            # buy all if we can
+            if budget - (value * quantity) >= 0:
+                stocksBought += quantity
+                budget -= (value * quantity)
+
+            # cant fit in the budget? Buy the units that we can!
+            else:
+                stocksBought += (budget // value)
+                # budget // value gives us the number of units we can buy for the current stock such that it fits our current budget
+
+                return stocksBought
+
+        return stocksBought
 
 
 
