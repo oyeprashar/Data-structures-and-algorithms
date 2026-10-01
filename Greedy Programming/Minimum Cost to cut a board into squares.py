@@ -5,6 +5,10 @@ Greedy Approach :
     - We want to use the costlier cuts when the number pieces are less!
     - This way the total cost is minimised
 
+
+Cutting vertically will increase the vertical pieces but the cut will run through horizontal pieces
+
+
 """
 
 class Solution:
@@ -43,4 +47,4 @@ class Solution:
             j += 1
 
         return totalCost
-        
+
