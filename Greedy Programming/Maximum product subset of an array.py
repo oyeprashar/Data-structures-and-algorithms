@@ -1,59 +1,42 @@
-"""
-Approach :
-
-for num in arr:
-    1. If the current number is neg, multiple it with product, keep track of count of negatives and the max of these negs
-    2. If the number is zero, DO NOT MULTIPLE and keep a count
-    3. Positives are always helpful and simply multiple them with the product
-
-Approach to generate the final answer :
-    1. if all elements were zero return 0
-    2. if n - 1 elements were zero and one was neg, return zero
-    3. if there were odd number of neg, that means we need to remove the max neg to maximise the product
-
-Why do we remove the maximum neg number?
-    The maximum negative is the one closest to zero, so it has the smallest absolute value and we want to remove
-    the smallest number from the product.
-"""
-
-
-
 class Solution:
-    def findMaxProduct(self, arr):
-        
-        if len(arr) == 1:
-            return arr[0]
 
-        # positive numbers are always useful in maximising the product
-        product = 1
-        maxNeg = -3**38
+    def maximizeSum(self, arr, k):
+
+        arr.sort()
+
+        """
+        Where to use the negations?
+            The smallest neg numbers
+
+        We must do k flips that's the rule
+
+        """
+
+        index = 0
         negCount = 0
-        zeroCount = 0
 
-        for num in arr:
+        while index < len(arr) and negCount < k:
 
-            # handling the negative numbers
-            if num < 0:
-                maxNeg = max(maxNeg, num)
+            if arr[index] < 0:
+                arr[index] *= -1
                 negCount += 1
-                product *= num
-                
-            # handling zeroes
-            elif num == 0:
-                zeroCount += 1
 
-            # handling positives
-            else:
-                product *= num
-                
-        if zeroCount == len(arr):
-            return 0
-        
-        if zeroCount == len(arr) - 1 and negCount == 1:
-            return 0
-        
-        if negCount % 2 == 1:
-            product = product // maxNeg
+        """
+        1. If no negations are required then we just return the sum of the array
+        2. If even number of negations are needed then we use them to neg the same number twice and keep the sum largest
 
-        return product
-        
+
+        """
+        if negCount == k or (k - negCount) % 2 == 0:
+            return sum(arr)
+
+        """
+        if the code came till this line that means the number of required negations is negative. We do one negation on
+        the smallest number and rest if wasted by negating same number twice!
+        """
+
+        arr.sort()
+        arr[0] *= -1
+
+        return sum(arr)
+
