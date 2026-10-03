@@ -13,9 +13,11 @@ class Solution:
         So we need to select m packets and minimise the max and min
         Max and min will be closet when the arr is sorted
 
-        1. Sort the array
-        2. Have a sliding window of size m
-        3. Max and min are closet and keep track of their difference for the global answer
+            1. Sort the array
+            2. Have a sliding window of size m
+            3. Max and min are closet and keep track of their difference for the global answer
+
+        This works because when we sort the arr, consecutive numbers are closet to each other
         """
 
         arr.sort()
