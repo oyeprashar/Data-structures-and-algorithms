@@ -1,40 +1,33 @@
+"""
+Find smallest d digit number with sum s
+"""
+
+
 class Solution:
 
-    def generateNumber(self, arr):
-        p = 1
-        num = 0
-
-        for i in range(len(arr) - 1, -1, -1):
-            num += (arr[i] * p)
-            p *= 10
-
-        return num
-
-    # Genarate smallest number of d digits such that the sum of digits is s
     def smallestNumber(self, sumOfDigits, numberOfDigits):
 
-        # impossible case!
-        if sumOfDigits > 9 * numberOfDigits:
+        # if its impossible to get the sum even with all 9s
+        if sumOfDigits > numberOfDigits * 9:
             return -1
 
-        # To minimise the number, we will save "1" for the left most digit
+        # we want to use the 1 on the left most place to minimise the num
         sumOfDigits -= 1
-        number = [0] * numberOfDigits
+        number = ["0"] * numberOfDigits
 
-        # run the loop from last index till 1st index
-        for i in range(len(number)-1, 0, -1):
+        # the loop won't go to the index 0s
+        for i in range(len(number) - 1, 0, -1):
 
             if sumOfDigits >= 9:
-                number[i] = 9
+                number[i] = str(9)
                 sumOfDigits -= 9
 
             else:
-                number[i] = sumOfDigits
+                number[i] = str(sumOfDigits)
                 sumOfDigits = 0
+                break
 
-        # putting the saved 1 and remaining number at the left most bit
-        number[0] = 1 + sumOfDigits
-        return self.generateNumber(number)
+        # place 1 on the left most place (and add whatever was left)
+        number[0] = str(1 + sumOfDigits)
+        return "".join(number)
 
-s = Solution()
-print(s.smallestNumber(20, 3))
