@@ -1,8 +1,8 @@
 """
--> Rat can move in directions - Up,Down,Right,Left
--> Rat can only travel through cells having 1
--> Rat cannot travel throught cells having 0
--> Rat cannot revisit the cell it visited in the current path
+Time complexity Analysis :
+    - There are 4 options at each cell U D L R
+    - lets say there are n cells
+    - formula O(options^number of times we do it) = O(4^n)
 """
 
 class Solution:
