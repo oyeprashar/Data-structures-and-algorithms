@@ -10,6 +10,9 @@ class Solution:
         dq2 = deque(s2)
         dq3 = deque(s3)
 
+
+        # We can only pop from the legal end to make the sums equal even if some other element could have made the
+        # sums equal
         while len(dq1) > 0 and len(dq2) > 0 and len(dq3) > 0:
 
             if sum1 == sum2 == sum3:
