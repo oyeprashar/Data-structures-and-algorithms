@@ -1,57 +1,114 @@
-def isValid(board,row,col):
-    rowH = row-1
-    while rowH > -1:
-        if board[rowH][col] == 1:
-            return False
-        rowH -= 1
+"""
+Input: n = 4
+Output: [[2, 4, 1, 3], [3, 1, 4, 2]]
+Explanation: There are 2 possible solutions for n = 4.
 
-    ldRow = row-1
-    ldCol = col-1
-    while ldRow >= 0 and ldCol >= 0:
-        if board[ldRow][ldCol] == 1:
-            return False
-        ldRow -= 1
-        ldCol -= 1
+    - n * n represents the board
+    - We need to place 4 queens on the board such that they are not attacking each other
+    - We need all the configurations for the given number of queens and the board
 
-    rdRow = row-1
-    rdCol = col+1
-    while rdRow >= 0 and rdCol < len(board):
-        if board[rdRow][rdCol] == 1:
-            return False
-        rdRow -= 1
-        rdCol += 1
-
-    return True
+"""
 
 
-def Nqueens(board,row,res):
 
-    if row == len(board):
-        list1 = []
-        for i in range(len(board)):
-            for j in range(len(board)):
-                if board[i][j] == 1:
-                    list1.append(j+1)
-        res.append(list1)
+class Solution:
+
+    def isValidConfig(self,row, col, board):
+
+        """
+        Conditions:
+            1. No other queen in the same row
+            2. No other queen in the same col
+            3. No other queen in the same dia
+
+        Since we are placing the queens row by row, we need to check the previous above cells
+        """
+
+        if row == 0:
+            return True
+
+        for i in range(row - 1, -1, -1):
+
+            if board[i][col] is True:
+                return False
+
+
+        for j in range(col - 1, -1, -1):
+            if board[row][j] is True:
+                return False
+
+
+
+        # checking up left diagonally
+        i = row - 1
+        j = col - 1
+
+        while i >= 0 and j >= 0:
+
+            if board[i][j] is True:
+                return False
+
+            i -= 1
+            j -= 1
+
+        # checking up right
+        i = row - 1
+        j = col + 1
+
+        while i >= 0 and i < len(board) and j >= 0  and j < len(board):
+
+            if board[i][j] is True:
+                return False
+
+            i -= 1
+            j += 1
+
+
+
+        return True
+
+
+
+    def placeNQueens(self, row, board, ans):
+
+        if row == len(board):
+            ans.append(self.convertToExpectedOutput(board))
+            return
+
+        for col in range(len(board[0])):
+
+            if self.isValidConfig(row, col, board):
+                board[row][col] = True
+                self.placeNQueens(row + 1, board, ans)
+                board[row][col] = False
+
         return
 
 
-    for col in range(len(board)): # row ke har column ko check krna h
-        if isValid(board,row,col) is True: # ex call1 -> call2 -> call3 not valid, so no more further calls are made and hence it will start to return back
-            board[row][col] =  1           # call1 - > call2 -> if row == len(board) save ans and return
-            Nqueens(board,row+1,res)
-            board[row][col] = 0
+    def convertToExpectedOutput(self, board):
+        ans = []
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+
+                if board[i][j] is True:
+                    ans.append(j + 1)
+
+        return ans
+
+    def nQueen(self, n):
+
+        board = []
+        for i in range(n):
+            currRow = []
+            for j in range(n):
+                currRow.append(False)
+            board.append(currRow)
+
+        ans = []
+        self.placeNQueens(0, board, ans)
+
+        return ans
 
 
-
-    # return
-#
-board =[[0,0,0,0],
-        [0,0,0,0],
-        [0,0,0,0],
-        [0,0,0,0]]
-# board = [[0]]
-res = []
-Nqueens(board,0,res)
-print(res)
-# print(board)
+s = Solution()
+print(s.nQueen(4))
