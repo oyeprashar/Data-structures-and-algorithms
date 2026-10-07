@@ -42,8 +42,3 @@ class Solution:
         wordSet = set(dictionary)
 
         cache = [-1] * (len(s) + 1)
-
-        return self.wordBreakHelper(0, s, wordSet, cache)
-
-s = Solution()
-print(s.wordBreak(s = "ilike",dictionary= ["i", "like", "gfg"]))
