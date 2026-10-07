@@ -2,6 +2,8 @@
     Input: s = "leetcode", wordDict = ["leet","code"]
     Output: true
     Explanation: Return true because "leetcode" can be segmented as "leet code".
+
+The time complexity is O(n^2 * n)
 """
 
 
