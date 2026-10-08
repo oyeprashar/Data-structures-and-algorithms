@@ -4,59 +4,65 @@ Approach is simple!
     - Remove brackets from the string
     - if number of removals needed == 0 and invalid brackets == 0, save it!
     - Memoisation to skip already processed strings!
+
+
+Time complexity :
+    - O(2^n) because at every index we have 2 options of removing or not removing the bracket
+    - O(n +n) for numberOfImblancedBrackets(string) and slicing
+    - total O(2^n *n)
 """
 
 
 class Solution:
 
-    # O(N)
-    def countBracketsCausingImbalance(self, string):
+    def numberOfImblancedBrackets(self, string):
 
         stack = []
+
         for bracket in string:
 
             if bracket not in "()":
                 continue
 
             if bracket == "(":
-                stack.append(bracket)
+                stack.append("(")
             else:
-                if len(stack) != 0 and stack[-1] == "(":
-                    stack.pop()
-                else:
+
+                if len(stack) == 0 or stack[-1] != '(':
                     stack.append(bracket)
+                else:
+                    stack.pop()
 
         return len(stack)
 
-    def generateBracketStrings(self, string, numberOfRemovals, ans, visited):
 
-        # memoisation!
+    def removeInvalidParenthesesHelper(self, string, numberOfRemovalsLeft, res, visited):
+
+        # The string is duplicate to a string we already processed
         if string in visited:
             return
 
-        # we found a valid string
-        if numberOfRemovals == 0 and self.countBracketsCausingImbalance(string) == 0:
-            ans.add(string)
+        # we found a valid representation
+        if numberOfRemovalsLeft == 0 and self.numberOfImblancedBrackets(string) == 0:
+            res.add(string)
             return
 
-        if numberOfRemovals == 0:
+        if numberOfRemovalsLeft == 0:
             return
 
         for i in range(len(string)):
-            if string[i] in "()":
-                newString = string[:i] + string[i+1:] # this is slicing and not direct indexing, so even when i >= len(s), no error is thrown and "" is returned
-                self.generateBracketStrings(newString, numberOfRemovals - 1, ans, visited)
+            newString = string[:i] + string[i + 1:]
+            self.removeInvalidParenthesesHelper(newString, numberOfRemovalsLeft - 1, res, visited)
 
+        # I have now finished exploring every possible recursive path that can originate from this string
+        # so mark this string as completely processed.
         visited.add(string)
 
-    # O(n^2)
-    def removeInvalidParentheses(self, s):
-        minRemoval = self.countBracketsCausingImbalance(s)
-        ans = set()
-        self.generateBracketStrings(s, minRemoval, ans, visited = set())
-        return list(ans)
+    def removeInvalidParentheses(self, string):
+        res = set()
+        self.removeInvalidParenthesesHelper(string, self.numberOfImblancedBrackets(string), res, set())
+        return list(res)
+
 
 s = Solution()
 print(s.removeInvalidParentheses("()())()"))
-print(s.removeInvalidParentheses("(a)())()"))  # This is wrong
-print(s.removeInvalidParentheses(")("))
