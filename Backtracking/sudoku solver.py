@@ -1,95 +1,120 @@
 """
 Since we have 9 options at each n*m cells the time complexity is O(9^(n*m))
 
-Logic to find the index of the box
-((box_row * 3) + box_col) = [0, 8]
+
+Box index = boxRow * numberOfBoxesPerRow + boxCol
+
+Where,
+    boxRow = row // numberOfRowsInABox
+    boxCol = col // numberOfColsInABox
 
 """
 
 class Solution:
 
-    def isValidPlacement(self, mat, number, row, col, boxes, rows, cols):
+    def isValid(self, num, row, col, rowSet, colSet, boxes):
 
-        if mat[row][col] != 0:
+        """
+        Rules :
+            1. Same number cannot be in the same row
+            2. Same number cannot be in the same column
+            3. Same number cannot be in the same 3*3 box
+        """
+
+        if num in rowSet[row]:
             return False
 
-        # if number in the same row
-        if number in rows[row]:
+        if num in colSet[col]:
             return False
 
-        # if number in the same col
-        if number in cols[col]:
-            return False
-
-        # if number is already in the same box
-        boxIndex = ((row // 3) * 3 + (col // 3))
-        if number in boxes[boxIndex]:
+        boxIndex = (row // 3) * 3 + (col // 3)
+        if num in boxes[boxIndex]:
             return False
 
         return True
 
+    def placeNumber(self, num, row, col, rowSet, colSet, boxes, mat):
 
-    def sudokuSolver(self, mat, row, col, boxes, rows, cols):
+        mat[row][col] = num
+        rowSet[row].add(num)
+        colSet[col].add(num)
+        boxIndex = (row // 3) * 3 + (col // 3)
+        boxes[boxIndex].add(num)
 
+
+    def unplaceNumber(self, num, row, col, rowSet, colSet, boxes, mat):
+        mat[row][col] = 0
+        rowSet[row].remove(num)
+        colSet[col].remove(num)
+        boxIndex = (row // 3) * 3 + (col // 3)
+        boxes[boxIndex].remove(num)
+
+    def sudokuSolver(self, row, col, mat, rowSet, colSet, boxes):
+
+        # everything is processed, save
         if row == len(mat):
-            print("**-----Solution found!-----**")
-            for row in mat:
-                print(row)
-            print("-----------------------------")
-            return
+            # TODO : we have solved the board, save it
+            return True
 
-        # if we have processed the complete row move on to the next row
+        # all the cols were process, moved to next row
         if col == len(mat[0]):
-            return self.sudokuSolver(mat, row + 1, 0, boxes, rows, cols)
+            return self.sudokuSolver(row + 1, 0, mat, rowSet, colSet, boxes)
 
-        # if the current cell is not empty, move on to the next cell
+        # cell is not empty, move to the next col
         if mat[row][col] != 0:
-            return self.sudokuSolver(mat, row, col + 1, boxes, rows, cols)
+            return self.sudokuSolver(row, col + 1, mat, rowSet, colSet, boxes)
 
-        for i in range(1, 10):
-            if self.isValidPlacement(mat, i, row, col, boxes, rows, cols):
-                mat[row][col] = i
+        for num in range(1, 10):
 
-                # add
-                boxIndex = boxIndex = ((row // 3) * 3 + (col // 3))
-                boxes[boxIndex].add(i)
-                rows[row].add(i)
-                cols[col].add(i)
+            if not self.isValid(num, row, col, rowSet, colSet, boxes):
+                continue
 
+            self.placeNumber(num, row, col, rowSet, colSet, boxes, mat)
 
-                self.sudokuSolver(mat, row, col + 1, boxes, rows, cols)
+            # Do not un-place the values which eventually led to a solved board!
+            if self.sudokuSolver(row, col + 1, mat, rowSet, colSet, boxes):
+                return True
 
-                # remove
-                mat[row][col] = 0
-                boxes[boxIndex].remove(i)
-                rows[row].remove(i)
-                cols[col].remove(i)
+            # Remove the values which did not end up returning true
+            self.unplaceNumber(num, row, col, rowSet, colSet, boxes, mat)
 
 
-    def getInitializedDicts(self, mat):
+    def initialiseValueSets(self, mat):
 
+        """
+        There needs to be a set for each of the following :
+            1. All rows
+            2. All cols
+            3. All boxes
+        """
+
+        rowSet = {0 : set(), 1 : set(), 2 : set(), 3 : set(), 4 : set(), 5 : set(), 6 : set(), 7: set(), 8 : set()}
+        colSet = {0: set(), 1: set(), 2: set(), 3: set(), 4: set(), 5: set(), 6: set(), 7: set(), 8: set()}
         boxes = {0: set(), 1: set(), 2: set(), 3: set(), 4: set(), 5: set(), 6: set(), 7: set(), 8: set()}
-        rows = {0: set(), 1: set(), 2: set(), 3: set(), 4: set(), 5: set(), 6: set(), 7: set(), 8: set()}
-        cols = {0: set(), 1: set(), 2: set(), 3: set(), 4: set(), 5: set(), 6: set(), 7: set(), 8: set()}
+
+        # now we need to loop through the data and fill these sets
+
 
         for i in range(len(mat)):
             for j in range(len(mat[0])):
 
-                if mat[i][j] != 0:
+                if mat[i][j] == 0:
+                    continue
 
-                    boxIndex = ((i // 3) * 3) + j // 3
-                    boxes[boxIndex].add(mat[i][j])
-                    rows[i].add(mat[i][j])
-                    cols[j].add(mat[i][j])
+                rowSet[i].add(mat[i][j])
+                colSet[j].add(mat[i][j])
 
-        return boxes, rows, cols
+                boxIndex = (i // 3) * 3 + (j // 3)
+                boxes[boxIndex].add(mat[i][j])
+
+        return rowSet, colSet, boxes
 
 
     def solveSudoku(self, mat):
 
-        boxes, rows, cols = self.getInitializedDicts(mat)
-        self.sudokuSolver(mat, 0, 0, boxes, rows, cols)
-
+        rowSet, colSet,boxes = self.initialiseValueSets(mat)
+        self.sudokuSolver(0, 0, mat, rowSet, colSet, boxes)
+        return mat
 
 
 matrix = [
