@@ -12,6 +12,8 @@ The time complexity is O(n!)
 
         That's total of n! choices
 
+    Time complexity : O(n! * n)
+
 """
 
 class Solution:
