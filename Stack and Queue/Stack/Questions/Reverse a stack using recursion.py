@@ -1,47 +1,48 @@
 """
-    Approach :
-        - Recursively remove elements from the stack until there is no more element
-        - Now insert the element st index zero goes to the end of the stack
+Reverse a stack recursively
+
+Time complexity is O(n^2) since we are iterating the array in both the methods and they are nested
 """
+
 
 class Solution:
 
-    # Now insert the element st index zero goes to the end of the stack
-    def insertAtStart(self, stack, num):
 
-        # We want to insert the element at the bottom
+    def insertAtABottom(self, element, stack):
 
-        # if no elements are there in the stack then append the element
+        # bottom reached, we put the element here
         if len(stack) == 0:
-            stack.append(num)
+            stack.append(element)
             return
 
-        # remove the elements
-        top  = stack.pop()
-        self.insertAtStart(stack, num)
-
-        # add the element back in the order they were
-        stack.append(top)
+        # save the element to put back while calls get returned so they go back to their original ordering
+        stackElement = stack.pop()
+        self.insertAtABottom(element, stack)
+        stack.append(stackElement)
 
 
-    # Recursively remove elements from the stack until there is no more element
-    def reverseStackHelper(self, stack):
+    """
+    The idea is to remove an element and then put it in the start effectively reversing the stack
+    """
+    def reverseStackRecursion(self, stack):
 
         if len(stack) == 0:
             return
 
-        top = stack.pop()
-        self.reverseStackHelper(stack)
+        element = stack.pop()
+        self.reverseStackRecursion(stack)
+        self.insertAtABottom(element, stack)
 
-        # now we have the first element, and we want to insert it at the bottom of the stack
-        self.insertAtStart(stack, top)
 
-        # insert it at the last of the stack
 
-    # O(n^2)
-    def reverseStack(self, stack):
-        self.reverseStackHelper(stack)
-        return stack
+    def reverseStack(self, st):
+        self.reverseStackRecursion(st)
+        return st
 
 s = Solution()
-print(s.reverseStack([1, 2, 3, 4, 5, 6]))
+
+# stack = [1, 2, 3, 4]
+# s.insertAtABottom(5, stack)
+# print(stack)
+
+print(s.reverseStack(st = [1, 2, 3, 4]))
