@@ -1,31 +1,36 @@
 """
-N = 4, arr[] = [1 3 2 4]
+    Input: arr[] = [1, 3, 2, 4]
+    Output: [3, 4, 4, -1]
+    Explanation: The next larger element to 1 is 3, 3 is 4, 2 is 4 and for 4, since it doesn't exist, it is -1.
 """
 
-def nextGreator(arr):
-    stack = []
-    ans = [-1] * len(arr)
+class Solution:
 
-    for i in range(len(arr)-1,-1,-1):
+    def nextLargerElement(self, arr):
 
-        while len(stack) > 0 and stack[-1] < arr[i]:
+        stack = []
+
+        ans = []
+        minSoFar = arr[-1]
+
+        for i in range(len(arr) -1, -1, -1):
+
+
+            while len(stack) > 0 and stack[-1] < arr[i]:
                 stack.pop()
 
-        if len(stack) == 0:
-            ans[i] = -1 
-            
+            if len(stack) == 0:
+                ans.append(-1)
+            else:
+                ans.append(stack[-1])
 
-        elif stack[-1] > arr[i]:
-            ans[i] = stack[-1]
+            stack.append(arr[i])
 
-        stack.append(arr[i])
-
-    return ans 
-
-arr = [1,3,2,4]
-print(nextGreator(arr))
+        return ans[::-1]
 
 
+s = Solution()
+print(s.nextLargerElement(arr = [6, 8, 0, 1, 3]))
+# [8, -1, 1, 3, -1]
 
-        
 
