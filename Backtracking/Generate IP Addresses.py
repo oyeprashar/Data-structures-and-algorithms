@@ -20,6 +20,7 @@ class Solution:
         if len(curr) > 4:
             return  
 
+        # When we have completed checking the combination and also have 4 valid chunks
         if  currIndex == len(string) and len(curr) == 4:
             currIP = ".".join(curr)
             ans.append(currIP)
