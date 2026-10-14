@@ -51,6 +51,7 @@ class Solution:
 
         for i in range(len(heights) - 1, -1, -1):
 
+            # here we have >= because we can include both larger and equal sized tower to form a rectangle
             while len(stack) > 0 and heights[stack[-1]] >= heights[i]:
                 stack.pop()
 
