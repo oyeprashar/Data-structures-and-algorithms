@@ -1,36 +1,47 @@
 """
-    problem statement : We need to find the max length of string where the brackets are balanced
-    Approach :
-        - We start balancing the brackets
-        - We save the index of last balanced substring (stack gets empty)
-        - We use that to compute the length when a substring is balanced
-        - return the max len
+
+The question is asking us to find the longest length that is balanced. We simulate exactly the same.
+
+
+We already know the code for balancing brackets in a string, now we make the following changes to that code. Now, we
+need to make it smarter such that we always know what length a closing bracket balances
+
+
+  Algorithm
+
+      The stack is initiated with -1 as if the whole string is balanced, we calculate the length of the whole string
+
+      1. Save the index of the opening bracket
+      2. When a closing bracket comes, we pop the element from the stack and then the length is computed with the stack top
+         this stack top acts as a boundary
+      NOTE : The len is NOT computed with what we popped and rather with the stack top
+      3. If a closing bracket makes the stack empty, then it means it is a new boundary as it is invalid and we append this
+      to the stack
 """
 
 
 class Solution:
     def maxLength(self, bracketString):
 
-        # we initialise stack with -1 because let's say the whole string was balanced then
-        # maxLen = lastIndex - (-1) = lastIndex + 1 = correct ans!
         stack = [-1]
         maxLen = 0
 
-        for i in range(len(bracketString)):
+        for index, bracket in enumerate(bracketString):
 
-            # save these indices
-            if bracketString[i] == "(":
-                stack.append(i)
-
-            # if bracket is ) then pop from stack
+            if bracket == "(":
+                stack.append(index)
             else:
                 stack.pop()
 
-                # can happen by alot of unbalanced closing brackets
+                #### TODO : write about this case! This is very special
                 if len(stack) == 0:
-                    # we need to save at what index this happened
-                    stack.append(i)
+                    stack.append(index)
+
                 else:
-                    maxLen = max(maxLen, i - stack[-1])
+                    maxLen = max(maxLen, index - stack[-1])
 
         return maxLen
+
+
+s = Solution()
+print(s.maxLength("(()())"))
