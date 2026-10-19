@@ -3,6 +3,8 @@ Approach :
     1. pop the first k element from the queue and into a stack
     2. pop the stack top and append the elements to the end of the same queue
     3. pop len(queue) - k elements and append to the end of the queue
+
+Time complexity : O(n)
 """
 
 
