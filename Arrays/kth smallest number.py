@@ -1,5 +1,9 @@
-import heapq
+"""
+The logic is that we keep k elements in the maxHeap and remove the top (max) element when the size is more than k, this
+will effectively maintain k-smallest elements
+"""
 
+import heapq
 
 class Solution:
     def kthSmallest(self, arr, k):
