@@ -2,8 +2,8 @@
 Form two numbers using all the digits such that their sum is minimized.
 
 Approach:
-    - We know that a number is small when the left most bit is small
-    - We sort the array and form two numbers such that the left most bit is minimised
+    - We know that a number is small when the left most bit is small (most significant bit is smallest)
+    - We sort the array and form two numbers such that the left most bit is minimized
 """
 
 import sys
