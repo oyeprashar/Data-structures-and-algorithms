@@ -1,21 +1,52 @@
 """
-Form two numbers using all the digits such that their sum is minimized.
+What is seenNone doing?
+    - The nodes in a heap are filled from left to right
+    - None nodes are allow in the lowest left at the right most side
+    - That simply means that once we encounter a None node, we should not see another non-none node
 """
 
-
 class Solution:
-    def minSum(self, arr):
 
-        arr.sort()
-        num1 = ""
-        num2 = ""
+    def isPropertyVoilated(self, node):
 
-        for i in range(len(arr)):
+        if node.left is None and node.right is not None:
+            return True
 
-            if i % 2 == 0:
-                num1 += str(arr[i])
-            else:
-                num2 += str(arr[i])
+        if node.left is not None and node.data < node.left.data:
+            return True
 
-        return int(num1) + int(num2)
+        if node.right is not None and node.data < node.right.data:
+            return True
 
+        return False
+
+    def isHeap(self, root):
+
+        queue = [root]
+        seenNone = False
+
+        while queue:
+
+            curr = queue.pop(0)
+
+            if self.isPropertyVoilated(curr):
+                return False
+
+            if curr.left is not None:
+
+                if seenNone:
+                    return False
+
+                queue.append(curr.left)
+
+            if curr.right is not None:
+
+                if seenNone:
+                    return False
+
+                queue.append(curr.right)
+
+            if curr.left is None or curr.right is None:
+                seenNone = True
+
+        return True
