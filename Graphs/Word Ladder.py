@@ -3,6 +3,7 @@ Time complexity analysis :
     - let N be the number of words
     - let L be the len of the word (len is same for the words)
 
+TC = O(N * L * L)
 """
 
 
