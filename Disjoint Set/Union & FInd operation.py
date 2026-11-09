@@ -1,3 +1,9 @@
+"""
+Rank is trying to balance the whole structure
+and compression is making the path smaller
+"""
+
+
 class DisjointSet:
 
     def __init__(self, number_of_nodes):
@@ -8,7 +14,10 @@ class DisjointSet:
     def find_parent(self, node):
         if self.parent[node] == -1:
             return node
-        return self.find_parent(self.parent[node])
+
+        # THis is how we compress the path <---- Important
+        self.parent[node] = self.find_parent(self.parent[node])
+        return self.parent[node]
 
     # O(log N) since it is finding the parent and then changing the parent in O(1)
     def union(self, node1, node2):
