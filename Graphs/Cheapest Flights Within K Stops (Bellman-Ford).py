@@ -10,6 +10,9 @@
         4. After a layer is processed, we update the value in minDist.
         5. This makes sure that the last layer weights affect the current computation and weights from current
            computation is not affecting distances.
+
+
+    So this is a controlled bellmanford
 """
 
 INT_MAX = 3 ** 38
