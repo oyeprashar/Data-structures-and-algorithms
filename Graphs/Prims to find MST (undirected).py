@@ -1,3 +1,14 @@
+"""
+Prims algo to find MST cost :
+    - Cost of source node is zero, push this in minHeap
+    - While there are elements in the minHeap
+        1. pop the unvisited min node
+        2. add its cost to total cost, mark it visited
+        3. Push its nbr to minHeap with the edge cost
+"""
+
+
+
 import heapq
 from collections import defaultdict
 
