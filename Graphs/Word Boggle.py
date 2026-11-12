@@ -1,61 +1,68 @@
+"""
+We backtrack the visited because some cells which we marked visited during certain path which did not led to the answer
+can be used in another path, we cannot simply block them
+"""
 
-# [[C, A, P], [A, N, D], [T, I, E]], dictionary[] = ["CAT"]
+
+from collections import defaultdict
+
 class Solution:
 
+    def isWordPresent(self, i, j, currIndex, word, board, directions, visited):
 
-    def wordBoggleHelper(self, i, j, board, currIndex, currWord, visited, directions):
+        if (i, j) in visited:
+            return
 
-        if currIndex[0] == len(currWord):
+        if currIndex[0] == len(word):
             return True
 
-        if i < 0 or i >= len(board) or j < 0 or j >= len(board[0]) or currIndex[0] > len(currWord):
+        if i < 0 or i >= len(board) or j < 0 or j >= len(board[0]):
             return False
 
-        if visited[i][j] is True or board[i][j] !=  currWord[currIndex[0]]:
+        if word[currIndex[0]] !=  board[i][j]:
             return False
 
-        visited[i][j] = True
         currIndex[0] += 1
+        visited.add((i, j))
 
-        for dir in directions:
-            if self.wordBoggleHelper(i + dir[0], j + dir[1], board, currIndex, currWord, visited, directions):
-                visited[i][j] = False
+        for moveRow, moveCol in directions:
+
+            newRow = i + moveRow
+            newCol = j + moveCol
+
+            if self.isWordPresent(newRow, newCol, currIndex, word, board, directions, visited):
                 return True
 
         currIndex[0] -= 1
-        visited[i][j] = False
+        visited.remove((i, j))
+        return False
+
 
 
     def wordBoggle(self, board, dictionary):
 
-        directions = [ (-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
-        visited = []
+        firstCharToWordList = defaultdict(list)
+
+        for word in dictionary:
+            firstCharToWordList[word[0]].append(word)
+
+
+        res = set()
+        directions = [(-1, 0), (1, 0), (0, 1), (0, -1), (1, -1), (1, -1), (1, 1), (-1, -1)]
+
         for i in range(len(board)):
-            currRow = []
-            for j in range(len(board[0])):
-                currRow.append(False)
-            visited.append(currRow)
-
-        ans = []
-
-        for i in range(len(board)):
             for j in range(len(board[0])):
 
-                for word in dictionary:
+                if board[i][j] in firstCharToWordList:
 
-                    if word[0] == board[i][j]:
+                    wordList = firstCharToWordList[board[i][j]]
 
-                        currIndex = [0]
-                        if self.wordBoggleHelper(i, j, board, currIndex, word, visited, directions):
+                    for word in wordList:
 
-                            ans.append(word)
+                        if word in res:
+                            continue
 
-        return list(set(ans))
+                        if self.isWordPresent(i, j, [0], word, board, directions, set( )):
+                            res.add(word)
 
-
-
-
-s = Solution()
-mat = [["C", "A", "P"], ["A", "N", "D"], ["T", "I", "E"]]
-print(s.wordBoggle(mat, ["CAT"]))
-
+        return list(res)
