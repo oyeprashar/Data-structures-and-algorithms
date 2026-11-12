@@ -31,6 +31,8 @@
 
     - IMP : if a parent's child is connected to some ancestor, the shortest time is update in all the nodes connected in
             this subtree as these nodes can reach the ancestor as well.
+
+    - NOTE : back-edge is an edge in a loop!
 """
 class Solution:
 
@@ -52,10 +54,12 @@ class Solution:
                 So if there is no back edge nbr's shortest time will be greater than currV and since we are picking the min,
                 there will be no effect
                 
-                If there is a back edge we propogate it 
+                If there is a back-edge, all the nodes in this loop gets this shortest time
                 """
                 shortestTimes[currV] = min(shortestTimes[currV], shortestTimes[nbr])
 
+
+                # There is a bridge since the shortest time to reach a nbr is greatrr than initial time of currV
                 if shortestTimes[nbr] > initialTimes[currV]:
                     bridges.append([currV, nbr])
 
