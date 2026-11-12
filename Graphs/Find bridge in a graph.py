@@ -32,64 +32,60 @@
     - IMP : if a parent's child is connected to some ancestor, the shortest time is update in all the nodes connected in
             this subtree as these nodes can reach the ancestor as well.
 """
-from collections import defaultdict
-
 class Solution:
 
-    def isBridgeDFS(self, currV, adj, visited, initialTime, shortestTime, currTime, source, destination, parent):
+    def bridgeDetectionDFS(self, currV, adj, initialTimes, shortestTimes, currTime, parent, visited, bridges):
 
         visited.add(currV)
-        initialTime[currV] = currTime[0]
-        shortestTime[currV] = currTime[0]
+        initialTimes[currV] = currTime[0]
+        shortestTimes[currV] = currTime[0]
         currTime[0] += 1
 
         for nbr in adj[currV]:
 
-            # parent of currV is nbr
-            if parent[currV] == nbr:
-                continue
-
             if nbr not in visited:
-
                 parent[nbr] = currV
+                self.bridgeDetectionDFS(nbr, adj, initialTimes, shortestTimes, currTime, parent, visited, bridges)
 
-                if self.isBridgeDFS(nbr, adj, visited, initialTime, shortestTime, currTime, source, destination, parent):
-                    return True
 
-                # If my child can reach an earlier node, then I can reach it through my child.
-                shortestTime[currV] = min(shortestTime[currV], shortestTime[nbr])
+                """
+                So if there is no back edge nbr's shortest time will be greater than currV and since we are picking the min,
+                there will be no effect
+                
+                If there is a back edge we propogate it 
+                """
+                shortestTimes[currV] = min(shortestTimes[currV], shortestTimes[nbr])
 
-               # bridge detected
-                if shortestTime[nbr] > initialTime[currV]:
-                    if (nbr == source and currV == destination) or (nbr == destination and currV == source):
-                        return True
+                if shortestTimes[nbr] > initialTimes[currV]:
+                    bridges.append([currV, nbr])
 
-            # back edge found as we found a node that was already visited and not parent of currV
             else:
-                shortestTime[currV] = min(shortestTime[currV], initialTime[nbr])
+                if parent[currV] == nbr:
+                    continue
 
-        return False
+                """
+                We found a node that was already visited and was not the parent of current node
+                This means there is a back edge, so initial time of this already visited node is smaller than current V 
+                """
+                shortestTimes[currV] = min(shortestTimes[currV], initialTimes[nbr])
 
-    def isBridge(self, V, edges, source, destination):
 
-        adj = defaultdict(list)
-
-        for edge in edges:
-            u = edge[0]
-            v = edge[1]
-            adj[u].append(v)
-            adj[v].append(u)
+    def findBridges(self, adj):
 
         visited = set()
-        initialTime = [-1] * V
-        shortestTime = [-1] * V
-        currTime = [0]
-        parent = [-1] * V
+        initialTimes = [0] * len(adj)
+        shortestTimes = [0] * len(adj)
+        currentTime = [0]
+        parent = [-1] * len(adj)
+        bridges = []
 
-        # Handles the disconnected component
-        for currV in range(V):
-            if currV not in visited and self.isBridgeDFS(currV, adj, visited, initialTime, shortestTime, currTime, source, destination, parent):
-                return True
+        for currV in range(len(adj)):
+
+            if currV not in visited:
+                self.bridgeDetectionDFS(currV, adj, initialTimes, shortestTimes, currentTime, parent, visited, bridges)
+
+        return bridges
 
 
-        return False
+s = Solution()
+print(s.findBridges([[1, 2], [0], [0]]))
