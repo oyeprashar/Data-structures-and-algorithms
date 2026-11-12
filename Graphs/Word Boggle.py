@@ -1,6 +1,9 @@
 """
 We backtrack the visited because some cells which we marked visited during certain path which did not led to the answer
 can be used in another path, we cannot simply block them
+
+
+Time complexity = O(n * m * w * 8^l)
 """
 
 
@@ -8,6 +11,7 @@ from collections import defaultdict
 
 class Solution:
 
+    # O(8^L)
     def isWordPresent(self, i, j, currIndex, word, board, directions, visited):
 
         if (i, j) in visited:
@@ -38,7 +42,7 @@ class Solution:
         return False
 
 
-
+    # O(n * m * 8^l)
     def wordBoggle(self, board, dictionary):
 
         firstCharToWordList = defaultdict(list)
