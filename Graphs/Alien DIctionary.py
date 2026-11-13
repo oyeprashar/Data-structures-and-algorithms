@@ -1,3 +1,9 @@
+"""
+What ordering of words are invalid?
+    In dictionary when the prefix is same between two words like "abcda" and "abc" then "abcda" cannot appear first.
+"""
+
+
 from collections import defaultdict
 
 class Solution:
