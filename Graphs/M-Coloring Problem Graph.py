@@ -3,9 +3,9 @@ Time complexity :
     Branching factor : k (we try all the colors)
     Number of times we do this : n (since we try for all the nodes)
 
-    We are also running a loop to check nbrs and a node can be connected to all the nodes
+    Work done at each call = O(k * n) <-- the two nested loops
 
-    TC : O(k^n * n)
+    TC : O(k^n * k*n)
 """
 
 
