@@ -32,7 +32,7 @@ Approach :
     opposite, count the number of steps from gate to each empty cell. This means, we can append all the gates to the
     queue and run one BFS to get the answer instead of running BFS multiple times from each empty cell
 
-    TC : O(n*m)
+    TC : O(n*m) because this is just BFS starting from multiple locations
 
 """
 
