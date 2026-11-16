@@ -1,3 +1,7 @@
+"""
+The problem statement really boils down to BFS + logic to convert numbers into cell indices
+"""
+
 class Solution:
 
     def getCellIndex(self, cellNumber, n):
