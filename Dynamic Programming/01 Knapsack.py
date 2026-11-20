@@ -1,27 +1,32 @@
+"""
+let N = len(values) or number of items
+let capacity be C
+
+then total size of cache table is N * C and work done at each call is O(1)
+
+Time complexity is : O(N*C)
+"""
+
 class Solution:
 
-    def knapSackHelper(self, W, wt, val, n, memory):
+    def knapsack01(self, currIndex,  values, weights, capacity, cache):
 
-        if n == 0 or W == 0:
+        if (currIndex, capacity) in cache:
+            return cache[(currIndex, capacity)]
+
+        if currIndex >= len(values):
             return 0
 
-        if wt[n - 1] > W:
-            memory[W][n] = self.knapSackHelper(W, wt, val, n - 1, memory)
-            return memory[W][n]
+        if capacity - weights[currIndex] < 0:
+            cache[(currIndex, capacity)] = self.knapsack01(currIndex + 1, values, weights, capacity, cache)
+            return cache[(currIndex, capacity)]
 
-        if memory[W][n] != -1:
-            return memory[W][n]
+        op1 = values[currIndex] + self.knapsack01(currIndex + 1, values, weights, capacity - weights[currIndex], cache)
+        op2 = self.knapsack01(currIndex + 1, values, weights, capacity, cache)
 
-        memory[W][n] = max(val[n - 1] + self.knapSackHelper(W - wt[n - 1], wt, val, n - 1, memory),self.knapSackHelper(W, wt, val, n - 1, memory))
-        return memory[W][n]
+        cache[(currIndex, capacity)] = max(op1, op2)
+        return cache[(currIndex, capacity)]
 
-    def knapSack(self, W, wt, val, n):
 
-        memory = []
-        for x in range(W + 1):
-            list1 = []
-            for y in range(n + 1):
-                list1.append(-1)
-            memory.append(list1)
-
-        return self.knapSackHelper(W, wt, val, n, memory)
+    def knapsack(self, capacity, values, weights):
+        return self.knapsack01(0, values, weights, capacity, cache={})
