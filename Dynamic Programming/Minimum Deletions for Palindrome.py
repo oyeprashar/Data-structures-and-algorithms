@@ -24,5 +24,4 @@ class Solution:
 
 
     def minDeletions(self, s):
-
-        return abs(len(s1) - self.getLCSLen(s, s[::-1]))
+        return abs(len(s) - self.getLCSLen(s, s[::-1]))
